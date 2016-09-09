@@ -1,0 +1,89 @@
+GitHub
+Allele freq to test allele calling
+Check expected distribution of genotypes
+
+
+
+QC of markers first, then individual samples:
+
+- GenomeStudio to plink, hg19 liftover, flip strand
+
+              GH: here are the steps and tools for this task
+              1) GenomeStudio to plink: by zcall script; already done
+              2) convert from AB allele to illumina TOP/BOT annotation: by plink, using Wrayner's annotation files; I can do it
+              3) hg19/build 37 liftover: by plink, using Wrayner's annotation files, also handles strand; I can do it
+
+- Allele frequency report with proportions; 
+
+- Select homogeneous set of samples to use as set for marker QC (PCA based, with automatic selection using e.g. 'aberrant' R package. This is to avoid artefacts from population structure. Excluded samples are later re-introduced.):
+http://bioinformatics.oxfordjournals.org/content/28/1/134.full.pdf+html
+Use summary statistics, and/or: missingness, ancestry, probe intensity, gender separately:
+	- Merge plates first
+	- Run PCA against 1000G (or Hapmap) as in UKB appendix 1 (requires using plink MAF >5%, HWE 10^-6, etc for Hapmap or 1000G, then projecting onto these)
+	- aberrant with lambda set to 20 for ancestry PC1 and PC2 as summary stats
+
+- Per batch marker QC (plink commands; drop failing SNPs from all plates):
+     + Exclude monomorphic SNPs
+     + Genotype call rate (<98%)
+     + Genotype frequency consistency across batches (Fisher's exact test p-value <10^-12)
+     + Allele frequency consistency versus reference panel (eg Hapmap, Fisher's exact test p-value <10^-12)
+     + Hardy Weinberg equilibrium (p-value <10^-12)
+
+- Plate/batch PCA (visual outlier detection check)
+
+- Plate/batch merge
+
+- Visual test of genotype calls in cluster plots (bin by MAF, pick random subset)
+
+- Pooled sample QC (all samples; based on high quality set of markers from above; plink commands):
+
+     + Run with autosomal SNPs only
+     + Heterozygosity (standard deviation > +/- 3) and genotype failure rates per individual (>5%)
+     + Relatedness between individuals (IBD cut-off >0.185)
+     + Gender mis-identification check
+
+- VCF check sanity (strand, problematic SNPs, etc.)
+
+- Imputation + post-imputation QC (we can discuss this at a later stage)
+
+- If several platforms, re-run whole script with each platform as separate batch
+
+- Final set of QC'd and imputed individuals and markers can then be processed depending on specific question, eg:
+     + Filter out MAF <1%
+     + Ancestry PCA (e.g. vs Hapmap populations), filter out on PC2 values <0.072
+     + Filter out mitochondrial and sex chromosomes
+
+- VCF check sanity (strand, problematic SNPs, etc.)
+
+Notes: 
+- Plates 1-27 are batch 1, 28-53 are batch 2.
+
+General protocols and references:
+http://www.ukbiobank.ac.uk/wp-content/uploads/2014/04/UKBiobank_genotyping_QC_documentation-web.pdf
+http://www.nature.com/nprot/journal/v5/n9/pdf/nprot.2010.116.pdf
+http://www.nature.com/nprot/journal/v10/n9/pdf/nprot.2015.077.pdf
+http://www.nature.com/ng/journal/vaop/ncurrent/pdf/ng.3656.pdf
+
+Also:
+Quality control and conduct of genome-wide association meta-analyses
+http://www.nature.com/nprot/journal/v9/n5/full/nprot.2014.071.html
+
+Association analysis, see:
+General protocol:
+Basic statistical analysis in genetic case-control studies
+http://www.nature.com/nprot/journal/v6/n2/abs/nprot.2010.182.html
+
+LD Score regression distinguishes confounding from polygenicity in genome-wide association studies
+http://www.nature.com/ng/journal/v47/n3/full/ng.3211.html
+https://github.com/bulik/ldsc
+
+Also check if Variance inflation factor need calculating and adjusting for. See methods in:
+Identification of 15 genetic loci associated with risk of major depression in individuals of European descent
+http://www.nature.com/ng/journal/v48/n9/full/ng.3623.html
+500,000 subjects
+
+
+Downstream annotation:
+DEPICT
+Biological interpretation of genome-wide association studies using predicted gene functions.
+http://www.ncbi.nlm.nih.gov/pubmed/25597830?dopt=Abstract&holding=npg
