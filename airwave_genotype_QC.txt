@@ -13,7 +13,9 @@ QC of markers first, then individual samples:
               2) convert from AB allele to illumina TOP/BOT annotation: by plink, using Wrayner's annotation files; I can do it
               3) hg19/build 37 liftover: by plink, using Wrayner's annotation files, also handles strand; I can do it
 
-- Allele frequency report with proportions; 
+- Allele frequency report with proportions:
+	plink2 --bifle xxx --freq
+	cat plink.frq | tr -s ' ' '\t' | cut -f 4 | grep A | wc -l # First column is a tab, so fourth is A1
 
 - Select homogeneous set of samples to use as set for marker QC (PCA based, with automatic selection using e.g. 'aberrant' R package. This is to avoid artefacts from population structure. Excluded samples are later re-introduced.):
 http://bioinformatics.oxfordjournals.org/content/28/1/134.full.pdf+html
