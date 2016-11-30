@@ -1,0 +1,40 @@
+Genotype QC TO DO!
+
+##############
+David 30 Nov 2016
+genotype tools
+https://github.com/AntonioJBT/genotype_tools
+
+test data: use first few batches for example, see bed, bim and fam files in:
+/groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles/
+
+mark steps for which some form of script already exists, see overall plan in:
+https://github.com/AntonioJBT/genotype_tools/blob/master/airwave_genotype_QC.txt
+
+##############
+add Gao's scripts to repo, check email:
+
+Pre-QC steps, here are what I did and the resources:
+
+Step 1: GenomeStudio report file -> plink, by batch
+
+Script: /groupvol/med-bio/epiUKB/Airwave/coreExome_zcall/zcall_v3.4/convertReportToTPED.py
+
+Job submission script: /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles/1_convertReportToTPED.pbs
+
+Result files: /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles
+
+Step 2: AB allele notation -> Illumina TOP/BOT notation
+
+Strand files: /groupvol/med-bio/epiUKB/Airwave/strandFiles
+
+(from http://www.well.ox.ac.uk/~wrayner/strand/)
+
+Command: plink --noweb --bfile --update-alleles humancoreexome-12v1-1_a.update_alleles.txt --make-bed --out
+
+Step 3: update genome build
+
+This includes updating a few attributes (chromosome, position, strand flipping etc)
+
+Script: http://www.well.ox.ac.uk/~wrayner/strand/update_build.sh
+##############
