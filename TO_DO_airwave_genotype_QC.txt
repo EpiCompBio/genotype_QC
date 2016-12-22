@@ -10,19 +10,14 @@ Antonio B
 #####################
 
 #####################
-Current state:
-- The plan is to create a QC pipeline based on Plink and other tools that can be automated using Ruffus and CGAT tools. The overall effort is towards reproducibility, sharing tools, teamwork, etc. I'm way behind schedule on the actual genotype tools as there has been a lot more setting up (and other work...) than I expected...
+Current state of the :
+- The plan is to create a QC pipeline based on Plink and other tools that can be automated using Ruffus and CGAT tools. 
+I'm way behind schedule on the actual genotype tools as there has been a lot more setting up (and other work...) than I expected...
+
+
 - Based on Gao's and other work the genotype data looks very good in general. 
 - The HPC team has installed ruffus and drmaa though, these are working. David and I have been testing these and everything seems in order. 
 - I've installed (in my user space) the CGAT Pipeline framework, others may need to do this as well later on. The CGAT tools work well for me, they required some manual installation of serveral of the python libraries though. I also made some changes so that they could communicate with PBS Pro, these work without problems. There has been a recent switch to python 3 though so I have to test the modifications in the CGAT scripts. Not expecting problems though (famous last words)...
-
-- The general approach is based on basic python organisation:
-	+ Scripts - Write stand-alon scripts which are callable from the CLI and can take arbitrary parameters
-	+ Modules - Include functions and code, which could be used by more than one script/pipeline, bundled by overall aim
-	+ Pipeline - a (ruffus) python script which chains multiple tasks and jobs and can be submitted to the cluster (managed by drmaa).
-	+ And ideally:
-		+ Unit tests - aim to test each script, parameter, function, with small, example data. Aimed for stability only (ie do new code changes mess up the expected results?). Use via Travis CI or Jenkins CI, integrated to GitHub (tests are automatically triggered after each commit, need configuration (eg yaml), data and expected result).
-	+ Report - aim to write a basic automated report that picks up some basic stats and plots for the pipeline (sphinx, markdown, or similar for example).
 #####################
 
 #####################
