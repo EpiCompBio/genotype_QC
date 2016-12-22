@@ -1,5 +1,6 @@
 #####################
 Plan for genotype QC for Airwave
+22 Dec 2016
 #####################
 
 #####################
@@ -10,19 +11,15 @@ Antonio B
 #####################
 
 #####################
-Current state of the :
+Current state:
 - The plan is to create a QC pipeline based on Plink and other tools that can be automated using Ruffus and CGAT tools. 
 I'm way behind schedule on the actual genotype tools as there has been a lot more setting up (and other work...) than I expected...
 
-
 - Based on Gao's and other work the genotype data looks very good in general. 
-- The HPC team has installed ruffus and drmaa though, these are working. David and I have been testing these and everything seems in order. 
-- I've installed (in my user space) the CGAT Pipeline framework, others may need to do this as well later on. The CGAT tools work well for me, they required some manual installation of serveral of the python libraries though. I also made some changes so that they could communicate with PBS Pro, these work without problems. There has been a recent switch to python 3 though so I have to test the modifications in the CGAT scripts. Not expecting problems though (famous last words)...
 #####################
 
 #####################
 Future:
-- I'm expecting that future pipelines can be written in the same way (to save time, for transparency, automation, re-use, etc.)
 - After the QC steps we will discuss the need for an imputation pipeline and what to do with the different platforms. i.e. Merge them, run as validation, as meta-analysis, etc. This may be project/question dependent though.
 - For imputation it would be ideal to do it ourselves. This needs person programming time and accessing the latest reference panel (we should try to get the HRC, Vangelis is looking into this).
 #####################
@@ -34,7 +31,6 @@ TO DO LIST for the actual genotype QC pipeline, main things:
 - Most of the scripts (from Gao and I and third party) are ready but need cleaning up, making sure they are callable and put into a pipeline.
 - Gao, Vangelis and I have discussed and agreed the steps to follow. These basically mirror de UK Biobank set up.
 
-- For Antonio: merge CGAT Py3 and test PBSPro again.
 #####################
 
 
