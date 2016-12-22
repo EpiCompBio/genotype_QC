@@ -12,8 +12,17 @@ Antonio B
 #####################
 Current state:
 - The plan is to create a QC pipeline based on Plink and other tools that can be automated using Ruffus and CGAT tools. The overall effort is towards reproducibility, sharing tools, teamwork, etc. I'm way behind schedule on the actual genotype tools as there has been a lot more setting up (and other work...) than I expected...
+- Based on Gao's and other work the genotype data looks very good in general. 
 - The HPC team has installed ruffus and drmaa though, these are working. David and I have been testing these and everything seems in order. 
 - I've installed (in my user space) the CGAT Pipeline framework, others may need to do this as well later on. The CGAT tools work well for me, they required some manual installation of serveral of the python libraries though. I also made some changes so that they could communicate with PBS Pro, these work without problems. There has been a recent switch to python 3 though so I have to test the modifications in the CGAT scripts. Not expecting problems though (famous last words)...
+
+- The general approach is based on basic python organisation:
+	+ Scripts - Write stand-alon scripts which are callable from the CLI and can take arbitrary parameters
+	+ Modules - Include functions and code, which could be used by more than one script/pipeline, bundled by overall aim
+	+ Pipeline - a (ruffus) python script which chains multiple tasks and jobs and can be submitted to the cluster (managed by drmaa).
+	+ And ideally:
+		+ Unit tests - aim to test each script, parameter, function, with small, example data. Aimed for stability only (ie do new code changes mess up the expected results?). Use via Travis CI or Jenkins CI, integrated to GitHub (tests are automatically triggered after each commit, need configuration (eg yaml), data and expected result).
+	+ Report - aim to write a basic automated report that picks up some basic stats and plots for the pipeline (sphinx, markdown, or similar for example).
 #####################
 
 #####################
@@ -31,6 +40,37 @@ TO DO LIST for the actual genotype QC pipeline, main things:
 - Gao, Vangelis and I have discussed and agreed the steps to follow. These basically mirror de UK Biobank set up.
 
 - For Antonio: merge CGAT Py3 and test PBSPro again.
+#####################
+
+
+#####################
+Gao has done cleaning up, formatting, sanity checks, etc. 
+
+I’ve updated the alleles (from A/B to TOP/BOT annotation), strand and genome build. Here’s the allele counts for batch 1 and it looks alright (similar for the other batches). 
+ 
+Based on the updated new plink files, I calculated the sample and SNP missingness and HWE p-values PER BATCH and it looks this:
+ 
+Sample missingness is very low in general. SNP missingness looks ok for all batches except for n23 and n46. (I think when calculating the SNP call rates, we need to exclude the non-autosomal SNPs. )
+ 
+The script (2_alleleBuildUpdate.pbs, 3_quickCheck.pbs) and files are all in the folder /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles. They are generated for information purpose and can be removed if we don’t need them later.
+ 
+
+I’ve fixed the four batches and the plink files have been generated. In case you need to run any loop there should be no problem now.
+ 
+Btw, I calculated the number of samples and some full batches do not have 288 samples in the intensity files (and therefore also in the plink files). Here’s the details:
+Haven’t figured out why it’s the case (due to sample failure, or duplication etc), but just let you know that not all the full batches have 288 samples.
+
+
+
+Subject: RE: airwave QC discussion
+From: "Gao, He" <h.gao@imperial.ac.uk>
+Date: 19/09/2016, 17:17
+To: "Berlanga, Antonio J" <a.berlanga@imperial.ac.uk>
+CC: "Evangelou, Evangelos" <e.evangelou@imperial.ac.uk>
+
+The script (2_alleleBuildUpdate.pbs, 3_quickCheck.pbs) and files are all in the folder /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles. They are generated for information purpose and can be removed if we don’t need them later.
+
+
 #####################
 
 
@@ -93,6 +133,7 @@ Use summary statistics, and/or: missingness, ancestry, probe intensity, gender s
 
 #####################
 Notes for Airwave data: 
+
 - There are three platforms: Exome, CoreExome and an Affy chip
 - Plates 1-27 are batch 1, 28-53 are batch 2.
 #####################
@@ -112,8 +153,7 @@ http://www.nature.com/nprot/journal/v9/n5/full/nprot.2014.071.html
 #####################
 
 #####################
-Association analysis, see:
-General protocol:
+Basic protocol for association analysis:
 Basic statistical analysis in genetic case-control studies
 http://www.nature.com/nprot/journal/v6/n2/abs/nprot.2010.182.html
 #####################
@@ -122,11 +162,23 @@ http://www.nature.com/nprot/journal/v6/n2/abs/nprot.2010.182.html
 #####################
 Other references to check:
 
+Eagle v2.3 User Manual
+https://data.broadinstitute.org/alkesgroup/Eagle/
 
+Reference-based phasing using the Haplotype Reference Consortium panel : Nature Genetics : Nature Research
+http://www.nature.com/ng/journal/v48/n11/full/ng.3679.html
+
+Population-specific genotype imputations using minimac or IMPUTE2 - nprot.2015.077.pdf
+http://www.nature.com/nprot/journal/v10/n9/pdf/nprot.2015.077.pdf
+
+ExonChipProcessing/BatchAlleleFreqMatrix.R at master · slzhao/ExonChipProcessing
+https://github.com/slzhao/ExonChipProcessing/blob/master/BatchAlleleFreqMatrix.R
+
+gabraham/flashpca: Fast Principal Component Analysis of Large-Scale Genome-Wide Data
+https://github.com/gabraham/flashpca#R
 
 Scaling probabilistic models of genetic variation to millions of humans : Nature Genetics : Nature Research
 http://www.nature.com/ng/journal/v48/n12/full/ng.3710.html
-
 
 Testing for genetic associations in arbitrarily structured populations : Nature Genetics : Nature Research
 http://www.nature.com/ng/journal/v47/n5/full/ng.3244.html
@@ -139,13 +191,11 @@ Also check if Variance inflation factor need calculating and adjusting for. See 
 Identification of 15 genetic loci associated with risk of major depression in individuals of European descent
 http://www.nature.com/ng/journal/v48/n9/full/ng.3623.html
 500,000 subjects
+#####################
 
 
 #####################
-
-#####################
-Downstream annotation:
-DEPICT
-Biological interpretation of genome-wide association studies using predicted gene functions.
+Downstream annotation, some to check later on:
+DEPICT Biological interpretation of genome-wide association studies using predicted gene functions.
 http://www.ncbi.nlm.nih.gov/pubmed/25597830?dopt=Abstract&holding=npg
 #####################
