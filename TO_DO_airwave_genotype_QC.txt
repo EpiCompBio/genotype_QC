@@ -1,9 +1,35 @@
-GitHub
-Allele freq to test allele calling
-Check expected distribution of genotypes
+#####################
+Plan for genotype QC for Airwave
+22 Dec 2017
+#####################
 
+#####################
+Gao He
+Vangelis
+Daivd M
+Antonio B
+#####################
 
+#####################
+The plan is to create a QC pipeline based on Plink and other tools that can be automated using Ruffus and CGAT tools. The overall effort is towards reproducibility, sharing tools, teamwork, etc.
+I'm way behind schedule on the actual genotype tools as there has been a lot more setting up (and other work...) than I expected. Sorry...
+The HPC team has installed ruffus and drmaa though, these are working. David and I have been testing these and everything seems in order.
+I've installed (in my user space) the CGAT Pipeline framework. This also works. There has been a recent switch to python 3 so I have to test the PBS Pro modifications I did to the pipeline framework/backbone. Not expecting problems though (famous last words)...
+#####################
 
+#####################
+TO DO LIST:
+For the actual genotype QC pipeline, main things to do:
+
+- Turn this plan into an actual pipeline! I had many problems installing some of the dependencies but these seem settled now. I'm hoping the effort will pay off as 
+- Most of the scripts (from Gao and I and third party) are ready but need cleaning up, making sure they are callable and put into a pipeline.
+- Gao, Vangelis and I have discussed and agreed the steps to follow. These basically mirror de UK Biobank set up
+- After the QC steps we will discuss the need for an imputation pipeline and what to do with the different platforms. i.e. Merge them, run as validation, as meta-analysis, etc. This may be project/question dependent though.
+- For imputation it would be ideal to do it ourselves. This needs person programming time and accessing the latest reference panel (we should try to get the HRC, Vangelis is looking into this).
+- 
+#####################
+
+#####################
 QC of markers first, then individual samples:
 
 - GenomeStudio to plink, hg19 liftover, flip strand
@@ -56,10 +82,17 @@ Use summary statistics, and/or: missingness, ancestry, probe intensity, gender s
      + Filter out mitochondrial and sex chromosomes
 
 - VCF check sanity (strand, problematic SNPs, etc.)
+#####################
 
-Notes: 
+#####################
+Notes for Airwave data: 
+- There are three platforms: Exome, CoreExome and an Affy chip
 - Plates 1-27 are batch 1, 28-53 are batch 2.
+#####################
 
+
+#####################
+Some references:
 General protocols and references:
 http://www.ukbiobank.ac.uk/wp-content/uploads/2014/04/UKBiobank_genotyping_QC_documentation-web.pdf
 http://www.nature.com/nprot/journal/v5/n9/pdf/nprot.2010.116.pdf
@@ -69,12 +102,17 @@ http://www.nature.com/ng/journal/vaop/ncurrent/pdf/ng.3656.pdf
 Also:
 Quality control and conduct of genome-wide association meta-analyses
 http://www.nature.com/nprot/journal/v9/n5/full/nprot.2014.071.html
+#####################
 
+#####################
 Association analysis, see:
 General protocol:
 Basic statistical analysis in genetic case-control studies
 http://www.nature.com/nprot/journal/v6/n2/abs/nprot.2010.182.html
+#####################
 
+
+#####################
 LD Score regression distinguishes confounding from polygenicity in genome-wide association studies
 http://www.nature.com/ng/journal/v47/n3/full/ng.3211.html
 https://github.com/bulik/ldsc
@@ -83,9 +121,11 @@ Also check if Variance inflation factor need calculating and adjusting for. See 
 Identification of 15 genetic loci associated with risk of major depression in individuals of European descent
 http://www.nature.com/ng/journal/v48/n9/full/ng.3623.html
 500,000 subjects
+#####################
 
-
+#####################
 Downstream annotation:
 DEPICT
 Biological interpretation of genome-wide association studies using predicted gene functions.
 http://www.ncbi.nlm.nih.gov/pubmed/25597830?dopt=Abstract&holding=npg
+#####################
