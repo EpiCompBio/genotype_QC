@@ -1,6 +1,5 @@
 #####################
 Plan for genotype QC for Airwave
-22 Dec 2017
 #####################
 
 #####################
@@ -11,25 +10,33 @@ Antonio B
 #####################
 
 #####################
-The plan is to create a QC pipeline based on Plink and other tools that can be automated using Ruffus and CGAT tools. The overall effort is towards reproducibility, sharing tools, teamwork, etc.
-I'm way behind schedule on the actual genotype tools as there has been a lot more setting up (and other work...) than I expected. Sorry...
-The HPC team has installed ruffus and drmaa though, these are working. David and I have been testing these and everything seems in order.
-I've installed (in my user space) the CGAT Pipeline framework. This also works. There has been a recent switch to python 3 so I have to test the PBS Pro modifications I did to the pipeline framework/backbone. Not expecting problems though (famous last words)...
+Current state:
+- The plan is to create a QC pipeline based on Plink and other tools that can be automated using Ruffus and CGAT tools. The overall effort is towards reproducibility, sharing tools, teamwork, etc. I'm way behind schedule on the actual genotype tools as there has been a lot more setting up (and other work...) than I expected...
+- The HPC team has installed ruffus and drmaa though, these are working. David and I have been testing these and everything seems in order. 
+- I've installed (in my user space) the CGAT Pipeline framework, others may need to do this as well later on. The CGAT tools work well for me, they required some manual installation of serveral of the python libraries though. I also made some changes so that they could communicate with PBS Pro, these work without problems. There has been a recent switch to python 3 though so I have to test the modifications in the CGAT scripts. Not expecting problems though (famous last words)...
 #####################
 
 #####################
-TO DO LIST:
-For the actual genotype QC pipeline, main things to do:
-
-- Turn this plan into an actual pipeline! I had many problems installing some of the dependencies but these seem settled now. I'm hoping the effort will pay off as 
-- Most of the scripts (from Gao and I and third party) are ready but need cleaning up, making sure they are callable and put into a pipeline.
-- Gao, Vangelis and I have discussed and agreed the steps to follow. These basically mirror de UK Biobank set up
+Future:
+- I'm expecting that future pipelines can be written in the same way (to save time, for transparency, automation, re-use, etc.)
 - After the QC steps we will discuss the need for an imputation pipeline and what to do with the different platforms. i.e. Merge them, run as validation, as meta-analysis, etc. This may be project/question dependent though.
 - For imputation it would be ideal to do it ourselves. This needs person programming time and accessing the latest reference panel (we should try to get the HRC, Vangelis is looking into this).
-- 
 #####################
 
 #####################
+TO DO LIST for the actual genotype QC pipeline, main things:
+
+- Turn this plan into an actual pipeline! I had many problems installing some of the dependencies but these seem settled now. I'm hoping the effort will pay off.
+- Most of the scripts (from Gao and I and third party) are ready but need cleaning up, making sure they are callable and put into a pipeline.
+- Gao, Vangelis and I have discussed and agreed the steps to follow. These basically mirror de UK Biobank set up.
+
+- For Antonio: merge CGAT Py3 and test PBSPro again.
+#####################
+
+
+#####################
+PIPELINE STEPS:
+
 QC of markers first, then individual samples:
 
 - GenomeStudio to plink, hg19 liftover, flip strand
@@ -92,14 +99,14 @@ Notes for Airwave data:
 
 
 #####################
-Some references:
+References
 General protocols and references:
 http://www.ukbiobank.ac.uk/wp-content/uploads/2014/04/UKBiobank_genotyping_QC_documentation-web.pdf
 http://www.nature.com/nprot/journal/v5/n9/pdf/nprot.2010.116.pdf
 http://www.nature.com/nprot/journal/v10/n9/pdf/nprot.2015.077.pdf
 http://www.nature.com/ng/journal/vaop/ncurrent/pdf/ng.3656.pdf
 
-Also:
+Also see:
 Quality control and conduct of genome-wide association meta-analyses
 http://www.nature.com/nprot/journal/v9/n5/full/nprot.2014.071.html
 #####################
@@ -113,6 +120,17 @@ http://www.nature.com/nprot/journal/v6/n2/abs/nprot.2010.182.html
 
 
 #####################
+Other references to check:
+
+
+
+Scaling probabilistic models of genetic variation to millions of humans : Nature Genetics : Nature Research
+http://www.nature.com/ng/journal/v48/n12/full/ng.3710.html
+
+
+Testing for genetic associations in arbitrarily structured populations : Nature Genetics : Nature Research
+http://www.nature.com/ng/journal/v47/n5/full/ng.3244.html
+
 LD Score regression distinguishes confounding from polygenicity in genome-wide association studies
 http://www.nature.com/ng/journal/v47/n3/full/ng.3211.html
 https://github.com/bulik/ldsc
@@ -121,6 +139,8 @@ Also check if Variance inflation factor need calculating and adjusting for. See 
 Identification of 15 genetic loci associated with risk of major depression in individuals of European descent
 http://www.nature.com/ng/journal/v48/n9/full/ng.3623.html
 500,000 subjects
+
+
 #####################
 
 #####################
