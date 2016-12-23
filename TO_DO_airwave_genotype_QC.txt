@@ -22,7 +22,6 @@ I'm way behind schedule on the actual genotype tools as there has been a lot mor
 - We have most of the scripts we need although they require a lot of cleaning up.
 
 - Gao, Vangelis and I have discussed and agreed the steps to follow. These basically mirror de UK Biobank set up.
-
 #####################
 
 #####################
@@ -33,30 +32,37 @@ Future work:
 #####################
 
 #####################
-TO DO LIST
+TO DO main tasks:
 
 - Turn this plan into an actual pipeline!
 
 - Most of the scripts (from Gao and I and third party) are ready but need cleaning up, making sure they are callable and put into a pipeline.
 
-- I've mar
+- I've marked what needs to be done below with "TO DO" and a short explanantion. Basically everything at this point, either creating the stand-alone script for that step or checking the existing one and transferring the command into the ruffus pipeline or cleaning it up/turning into a script.
 #####################
 
 #####################
 Notes for Airwave data: 
 
+TO DO: Location of basic phenotype data
+TO DO: location of current genotype data
+TO DO: location of WTCHG Core Facility reports
+
 - There are three platforms: Exome, CoreExome and an Affy chip
+TO DO: location of each
+
 - Plates 1-27 are batch 1, 28-53 are batch 2.
 #####################
 
 
 #####################
 Notes from Gao's work:
-Gao has done cleaning up, formatting, sanity checks, etc. 
+Gao has done cleaning up, formatting, sanity checks, etc. already. 
 See emails
-TO DO: update these notes here so we can follow this up more easily.
+TO DO: update these notes here so we can follow this up more easily
+TO DO: create JISCMAIL list to improve communication, keep history.
 
-
+##########
 Subject: RE: airwave QC discussion
 From: "Gao, He" <h.gao@imperial.ac.uk>
 Date: 19/09/2016, 17:17
@@ -67,95 +73,128 @@ CC: "Evangelou, Evangelos" <e.evangelou@imperial.ac.uk>
 - updated new plink files
 - calculated the sample and SNP missingness and HWE p-values PER BATCH. Sample missingness is very low in general. SNP missingness looks ok for all batches except for n23 and n46. (I think when calculating the SNP call rates, we need to exclude the non-autosomal SNPs.)
  
-TO DO move these scripts here:
+TO DO: move these scripts here:
 - The script (2_alleleBuildUpdate.pbs, 3_quickCheck.pbs) and files are all in the folder /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles. They are generated for information purpose and can be removed if we don’t need them later.
  
 - fixed the four batches and the plink files have been generated. In case you need to run any loop there should be no problem now.
  
 - calculated the number of samples and some full batches do not have 288 samples in the intensity files (and therefore also in the plink files).
-#####################
+##########
 
-##############
+##########
+TO DO: more emails missing, update/transfer info here for clarity and follow-up
+##########
+
+##########
 test data: use first few batches for example, see bed, bim and fam files in:
 /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles/
-##############
+##########
+#####################
+
 
 #####################
-PIPELINE STEPS:
+##########
+PIPELINE PLAN
+##########
+
+##########
 Files to check to pull out commands for most of the steps below:
 	plink_preprocessing.txt
 	QC_plink_individuals.sh
 	markers_QC_Airwave.sh
 
-QC of markers first, then individual samples:
+QC of markers first, then individual samples although these steps largely follow the UK Biobank protocol (which geos back and forth between markers and individuals as it first creates a homogeneous group [based on ethnicity] from where to pull out high quality genetic markers which are not confounded by population stratification.
 
-TO DO load into pipeline: 
-- Pre-QC steps, GenomeStudio to plink, hg19 liftover, flip strand
+NOTE: Try to keep scripts, modules, pipelines separate.
+##########
 
+##########
+- Pre-QC steps, GenomeStudio to plink, hg19 liftover, flip strand:
 
-	Step 1: GenomeStudio report file -> plink, by batch
+TO DO: load into pipeline by calling each script or function. Needs a if/else decision (if illumina, convert to xxx, if affy do xxx, else error):
+
+	1) GenomeStudio to plink: by zcall script:
 		Script: /groupvol/med-bio/epiUKB/Airwave/coreExome_zcall/zcall_v3.4/convertReportToTPED.py
 		Job submission script: /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles/1_convertReportToTPED.pbs
 		Result files: /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles
 
-	Step 2: AB allele notation -> Illumina TOP/BOT notation
+	2) Convert from AB allele to illumina TOP/BOT annotation: by plink, using Wrayner's annotation files
 		Strand files: /groupvol/med-bio/epiUKB/Airwave/strandFiles
 		(from http://www.well.ox.ac.uk/~wrayner/strand/)
 		Command: plink --noweb --bfile --update-alleles humancoreexome-12v1-1_a.update_alleles.txt --make-bed --out
 
-	Step 3: update genome build
+	3) Update genome build: hg19/build 37 liftover: by plink, using Wrayner's annotation files, also handles strand
 		This includes updating a few attributes (chromosome, position, strand flipping etc)
 		Script: http://www.well.ox.ac.uk/~wrayner/strand/update_build.sh
+##########
 
-
-              GH: here are the steps and tools for this task
-              1) GenomeStudio to plink: by zcall script; already done
-              2) convert from AB allele to illumina TOP/BOT annotation: by plink, using Wrayner's annotation files; I can do it
-              3) hg19/build 37 liftover: by plink, using Wrayner's annotation files, also handles strand; I can do it
-
-TO DO write scripts/commands: 
+##########
 - Allele frequency report with proportions:
+TO DO write commands into ruffus pipeline, e.g. (see also sh scripts above):
 	plink2 --bifle xxx --freq
 	cat plink.frq | tr -s ' ' '\t' | cut -f 4 | grep A | wc -l # First column is a tab, so fourth is A1
+##########
 
-TO DO write scripts/commands:
+##########
 - Select homogeneous set of samples to use as set for marker QC (PCA based, with automatic selection using e.g. 'aberrant' R package. This is to avoid artefacts from population structure. Excluded samples are later re-introduced.):
-http://bioinformatics.oxfordjournals.org/content/28/1/134.full.pdf+html
-Use summary statistics, and/or: missingness, ancestry, probe intensity, gender separately:
-	- Merge plates first
-	- Run PCA against 1000G (or Hapmap) as in UKB appendix 1 (requires using plink MAF >5%, HWE 10^-6, etc for Hapmap or 1000G, then projecting onto these)
-	- aberrant with lambda set to 20 for ancestry PC1 and PC2 as summary stats
+	http://bioinformatics.oxfordjournals.org/content/28/1/134.full.pdf+html
+	Use summary statistics, and/or: missingness, ancestry, probe intensity, gender separately:
+	TO DO write commands into ruffus pipeline:
+		- Merge plates first
+		
+	TO DO write commands into ruffus pipeline (see scripts above although PCA tool needs changing to FlashPCA probably as older tools won't run on large number of samples):
+		- Run PCA against 1000G (or Hapmap) as in UKB appendix 1 (requires using plink MAF >5%, HWE 10^-6, etc for Hapmap or 1000G, then projecting onto these)
+		
+	TO DO write script to wrap aberrant and make it callable from CLI within pipeline:	
+		- aberrant with lambda set to 20 for ancestry PC1 and PC2 as summary stats
+##########
 
-TO DO write scripts/commands:
+##########
 - Per batch marker QC (plink commands; drop failing SNPs from all plates):
-     + Exclude monomorphic SNPs
-     + Genotype call rate (<98%)
-     + Genotype frequency consistency across batches (Fisher's exact test p-value <10^-12)
-     + Allele frequency consistency versus reference panel (eg Hapmap, Fisher's exact test p-value <10^-12)
-     + Hardy Weinberg equilibrium (p-value <10^-12)
+TO DO write script for this, needs loop calling batch 1 vs all other batches, then batch 2 vs all other batches, etc. with parameters (eg p-values and all the criteria below) can be set by user:
+	+ Exclude monomorphic SNPs
+	+ Genotype call rate (<98%)
+	+ Genotype frequency consistency across batches (Fisher's exact test p-value <10^-12)
+	+ Allele frequency consistency versus reference panel (eg Hapmap, Fisher's exact test p-value <10^-12)
+	+ Hardy Weinberg equilibrium (p-value <10^-12)
+##########
 
-TO DO write scripts/commands:
+##########
 - Plate/batch PCA (visual outlier detection check)
+TO DO clean up commands from above and plotting script for this (may need substantial re-working with tools that take thousands of samples, check notes/discuss)
+##########
 
-TO DO write scripts/commands:
+##########
 - Plate/batch merge
+TO DO write scripts/commands
+##########
 
-TO DO write scripts/commands:
+##########
 - Visual test of genotype calls in cluster plots (bin by MAF, pick random subset)
+TO DO write scripts for this: Gao has plotted these before and I think has scripts. Obviously can't check thousands of SNPs visually svo either use a random pick (e.g. grab 20 or whatever is plottable) or better grab top 10 highest quality SNPs, bottom 10, 10 failed SNPs, 10 at MAF > 10%, 10 at 1-5%, 10 <1%, etc. The aim is to have some visual sanity check of the raw data for some of the markers.
+##########
 
-TO DO write scripts/commands:
+##########
 - Pooled sample QC (all samples; based on high quality set of markers from above; plink commands):
-
+TO DO these are plink commands that can be put directly into the ruffus pipeline with a PARAMS config option so user can set different cut-offs (these PARAMS and config file are standard for CGAT pipelines):
      + Run with autosomal SNPs only
      + Heterozygosity (standard deviation > +/- 3) and genotype failure rates per individual (>5%)
      + Relatedness between individuals (IBD cut-off >0.185)
      + Gender mis-identification check
+##########
 
-TO DO write scripts/commands:
+##########
 - VCF check sanity (strand, problematic SNPs, etc.)
+TO DO look up tools and insert command into Ruffus, these already exist, plink2 has commands for this.
+##########
+#####################
 
-TO DO write scripts/commands:
-- Imputation + post-imputation QC (we can discuss this at a later stage)
+
+#####################
+Future work
+The output of the genotpe QC pipeline should be input for:
+
+- Imputation + post-imputation QC (discuss this at a later stage)
 
 - If several platforms, re-run whole script with each platform as separate batch
 
@@ -166,6 +205,7 @@ TO DO write scripts/commands:
 
 - VCF check sanity (strand, problematic SNPs, etc.)
 #####################
+
 
 #####################
 References
