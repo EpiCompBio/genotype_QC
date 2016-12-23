@@ -22,6 +22,9 @@ I'm way behind schedule on the actual genotype tools as there has been a lot mor
 - We have most of the scripts we need although they require a lot of cleaning up.
 
 - Gao, Vangelis and I have discussed and agreed the steps to follow. These basically mirror de UK Biobank set up.
+
+- I created a dummy pipeline in the src folder with a dummy report in the report folder.
+(these are the ones created by the cgat quickstart pipeline)
 #####################
 
 #####################
