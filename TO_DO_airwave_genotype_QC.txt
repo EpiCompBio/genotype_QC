@@ -13,44 +13,48 @@ Antonio B
 #####################
 Current state:
 - The plan is to create a QC pipeline based on Plink and other tools that can be automated using Ruffus and CGAT tools. 
-I'm way behind schedule on the actual genotype tools as there has been a lot more setting up (and other work...) than I expected...
+I'm way behind schedule on the actual genotype tools as there has been a lot more setting up (and other work) than I expected...
 
 - Based on Gao's and other work the genotype data looks very good in general. 
-#####################
 
-#####################
-Future:
-- After the QC steps we will discuss the need for an imputation pipeline and what to do with the different platforms. i.e. Merge them, run as validation, as meta-analysis, etc. This may be project/question dependent though.
-- For imputation it would be ideal to do it ourselves. This needs person programming time and accessing the latest reference panel (we should try to get the HRC, Vangelis is looking into this).
-#####################
+- CGAT, ruffus, drmma are in place and generally working with a few bumps.
 
-#####################
-TO DO LIST for the actual genotype QC pipeline, main things:
+- We have most of the scripts we need although they require a lot of cleaning up.
 
-- Turn this plan into an actual pipeline! I had many problems installing some of the dependencies but these seem settled now. I'm hoping the effort will pay off.
-- Most of the scripts (from Gao and I and third party) are ready but need cleaning up, making sure they are callable and put into a pipeline.
 - Gao, Vangelis and I have discussed and agreed the steps to follow. These basically mirror de UK Biobank set up.
 
 #####################
 
+#####################
+Future work:
+- After the QC steps we will discuss the need for an imputation pipeline and what to do with the different platforms. i.e. Merge them, run as validation, as meta-analysis, etc. This may be project/question dependent though.
+
+- For imputation it would be ideal to do it ourselves. This needs person programming time and accessing the latest reference panel (we should try to get the HRC, Vangelis is looking into this).
+#####################
 
 #####################
+TO DO LIST
+
+- Turn this plan into an actual pipeline!
+
+- Most of the scripts (from Gao and I and third party) are ready but need cleaning up, making sure they are callable and put into a pipeline.
+
+- I've mar
+#####################
+
+#####################
+Notes for Airwave data: 
+
+- There are three platforms: Exome, CoreExome and an Affy chip
+- Plates 1-27 are batch 1, 28-53 are batch 2.
+#####################
+
+
+#####################
+Notes from Gao's work:
 Gao has done cleaning up, formatting, sanity checks, etc. 
-
-I’ve updated the alleles (from A/B to TOP/BOT annotation), strand and genome build. Here’s the allele counts for batch 1 and it looks alright (similar for the other batches). 
- 
-Based on the updated new plink files, I calculated the sample and SNP missingness and HWE p-values PER BATCH and it looks this:
- 
-Sample missingness is very low in general. SNP missingness looks ok for all batches except for n23 and n46. (I think when calculating the SNP call rates, we need to exclude the non-autosomal SNPs. )
- 
-The script (2_alleleBuildUpdate.pbs, 3_quickCheck.pbs) and files are all in the folder /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles. They are generated for information purpose and can be removed if we don’t need them later.
- 
-
-I’ve fixed the four batches and the plink files have been generated. In case you need to run any loop there should be no problem now.
- 
-Btw, I calculated the number of samples and some full batches do not have 288 samples in the intensity files (and therefore also in the plink files). Here’s the details:
-Haven’t figured out why it’s the case (due to sample failure, or duplication etc), but just let you know that not all the full batches have 288 samples.
-
+See emails
+TO DO: update these notes here so we can follow this up more easily.
 
 
 Subject: RE: airwave QC discussion
@@ -59,28 +63,62 @@ Date: 19/09/2016, 17:17
 To: "Berlanga, Antonio J" <a.berlanga@imperial.ac.uk>
 CC: "Evangelou, Evangelos" <e.evangelou@imperial.ac.uk>
 
-The script (2_alleleBuildUpdate.pbs, 3_quickCheck.pbs) and files are all in the folder /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles. They are generated for information purpose and can be removed if we don’t need them later.
-
-
+- updated the alleles (from A/B to TOP/BOT annotation), strand and genome build. 
+- updated new plink files
+- calculated the sample and SNP missingness and HWE p-values PER BATCH. Sample missingness is very low in general. SNP missingness looks ok for all batches except for n23 and n46. (I think when calculating the SNP call rates, we need to exclude the non-autosomal SNPs.)
+ 
+TO DO move these scripts here:
+- The script (2_alleleBuildUpdate.pbs, 3_quickCheck.pbs) and files are all in the folder /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles. They are generated for information purpose and can be removed if we don’t need them later.
+ 
+- fixed the four batches and the plink files have been generated. In case you need to run any loop there should be no problem now.
+ 
+- calculated the number of samples and some full batches do not have 288 samples in the intensity files (and therefore also in the plink files).
 #####################
 
+##############
+test data: use first few batches for example, see bed, bim and fam files in:
+/groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles/
+##############
 
 #####################
 PIPELINE STEPS:
+Files to check to pull out commands for most of the steps below:
+	plink_preprocessing.txt
+	QC_plink_individuals.sh
+	markers_QC_Airwave.sh
 
 QC of markers first, then individual samples:
 
-- GenomeStudio to plink, hg19 liftover, flip strand
+TO DO load into pipeline: 
+- Pre-QC steps, GenomeStudio to plink, hg19 liftover, flip strand
+
+
+	Step 1: GenomeStudio report file -> plink, by batch
+		Script: /groupvol/med-bio/epiUKB/Airwave/coreExome_zcall/zcall_v3.4/convertReportToTPED.py
+		Job submission script: /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles/1_convertReportToTPED.pbs
+		Result files: /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles
+
+	Step 2: AB allele notation -> Illumina TOP/BOT notation
+		Strand files: /groupvol/med-bio/epiUKB/Airwave/strandFiles
+		(from http://www.well.ox.ac.uk/~wrayner/strand/)
+		Command: plink --noweb --bfile --update-alleles humancoreexome-12v1-1_a.update_alleles.txt --make-bed --out
+
+	Step 3: update genome build
+		This includes updating a few attributes (chromosome, position, strand flipping etc)
+		Script: http://www.well.ox.ac.uk/~wrayner/strand/update_build.sh
+
 
               GH: here are the steps and tools for this task
               1) GenomeStudio to plink: by zcall script; already done
               2) convert from AB allele to illumina TOP/BOT annotation: by plink, using Wrayner's annotation files; I can do it
               3) hg19/build 37 liftover: by plink, using Wrayner's annotation files, also handles strand; I can do it
 
+TO DO write scripts/commands: 
 - Allele frequency report with proportions:
 	plink2 --bifle xxx --freq
 	cat plink.frq | tr -s ' ' '\t' | cut -f 4 | grep A | wc -l # First column is a tab, so fourth is A1
 
+TO DO write scripts/commands:
 - Select homogeneous set of samples to use as set for marker QC (PCA based, with automatic selection using e.g. 'aberrant' R package. This is to avoid artefacts from population structure. Excluded samples are later re-introduced.):
 http://bioinformatics.oxfordjournals.org/content/28/1/134.full.pdf+html
 Use summary statistics, and/or: missingness, ancestry, probe intensity, gender separately:
@@ -88,6 +126,7 @@ Use summary statistics, and/or: missingness, ancestry, probe intensity, gender s
 	- Run PCA against 1000G (or Hapmap) as in UKB appendix 1 (requires using plink MAF >5%, HWE 10^-6, etc for Hapmap or 1000G, then projecting onto these)
 	- aberrant with lambda set to 20 for ancestry PC1 and PC2 as summary stats
 
+TO DO write scripts/commands:
 - Per batch marker QC (plink commands; drop failing SNPs from all plates):
      + Exclude monomorphic SNPs
      + Genotype call rate (<98%)
@@ -95,12 +134,16 @@ Use summary statistics, and/or: missingness, ancestry, probe intensity, gender s
      + Allele frequency consistency versus reference panel (eg Hapmap, Fisher's exact test p-value <10^-12)
      + Hardy Weinberg equilibrium (p-value <10^-12)
 
+TO DO write scripts/commands:
 - Plate/batch PCA (visual outlier detection check)
 
+TO DO write scripts/commands:
 - Plate/batch merge
 
+TO DO write scripts/commands:
 - Visual test of genotype calls in cluster plots (bin by MAF, pick random subset)
 
+TO DO write scripts/commands:
 - Pooled sample QC (all samples; based on high quality set of markers from above; plink commands):
 
      + Run with autosomal SNPs only
@@ -108,8 +151,10 @@ Use summary statistics, and/or: missingness, ancestry, probe intensity, gender s
      + Relatedness between individuals (IBD cut-off >0.185)
      + Gender mis-identification check
 
+TO DO write scripts/commands:
 - VCF check sanity (strand, problematic SNPs, etc.)
 
+TO DO write scripts/commands:
 - Imputation + post-imputation QC (we can discuss this at a later stage)
 
 - If several platforms, re-run whole script with each platform as separate batch
@@ -121,14 +166,6 @@ Use summary statistics, and/or: missingness, ancestry, probe intensity, gender s
 
 - VCF check sanity (strand, problematic SNPs, etc.)
 #####################
-
-#####################
-Notes for Airwave data: 
-
-- There are three platforms: Exome, CoreExome and an Affy chip
-- Plates 1-27 are batch 1, 28-53 are batch 2.
-#####################
-
 
 #####################
 References
