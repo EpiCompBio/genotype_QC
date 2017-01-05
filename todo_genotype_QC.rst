@@ -4,7 +4,7 @@ Plan for genotype QC for Airwave
 
 :Author: Antonio
 :Date: 22 Dec 2016
-.. :Authors: Gao He, Vangelis, Daivd M, Antonio B
+:Authors: Gao He, Vangelis, Daivd M, Antonio B
 
 
 Current state:
@@ -69,6 +69,7 @@ Gao has done cleaning up, formatting, sanity checks, etc. already.
 See emails
 
 -----
+
 Subject: RE: airwave QC discussion
 From: "Gao, He" <h.gao@imperial.ac.uk>
 Date: 19/09/2016, 17:17
@@ -85,10 +86,12 @@ TO DO: move these scripts here:
 - fixed the four batches and the plink files have been generated. In case you need to run any loop there should be no problem now.
  
 - calculated the number of samples and some full batches do not have 288 samples in the intensity files (and therefore also in the plink files).
+
 -----
 
 .. todo:: 
 	TO DO: more emails missing, update/transfer info here for clarity and follow-up
+
 -----
 
 test data: use first few batches for example, see bed, bim and fam files in:
@@ -107,6 +110,7 @@ QC of markers first, then individual samples although these steps largely follow
 
 .. note::
 	Try to keep scripts, modules, pipelines separate.
+
 -----
 
 A. Pre-QC steps, GenomeStudio to plink, hg19 liftover, flip strand:
@@ -126,12 +130,14 @@ A. Pre-QC steps, GenomeStudio to plink, hg19 liftover, flip strand:
 	3. Update genome build: hg19/build 37 liftover: by plink, using Wrayner's annotation files, also handles strand
 		This includes updating a few attributes (chromosome, position, strand flipping etc)
 		Script: http://www.well.ox.ac.uk/~wrayner/strand/update_build.sh
+
 -----
 
 B. Allele frequency report with proportions:
 	TO DO write commands into ruffus pipeline, e.g. (see also sh scripts above):
 	plink2 --bifle xxx --freq
 ..	cat plink.frq | tr -s ' ' '\t' | cut -f 4 | grep A | wc -l # First column is a tab, so fourth is A1
+
 -----
 
 #. Select homogeneous set of samples to use as set for marker QC (PCA based, with automatic selection using e.g. 'aberrant' R package. This is to avoid artefacts from population structure. Excluded samples are later re-introduced.):
@@ -145,6 +151,7 @@ B. Allele frequency report with proportions:
 		
 	TO DO write script to wrap aberrant and make it callable from CLI within pipeline:	
 		- aberrant with lambda set to 20 for ancestry PC1 and PC2 as summary stats
+
 -----
 
 #. Per batch marker QC (plink commands; drop failing SNPs from all plates):
@@ -154,18 +161,22 @@ B. Allele frequency report with proportions:
 		+ Genotype frequency consistency across batches (Fisher's exact test p-value <10^-12)
 		+ Allele frequency consistency versus reference panel (eg Hapmap, Fisher's exact test p-value <10^-12)
 		+ Hardy Weinberg equilibrium (p-value <10^-12)
+
 -----
 
 #. Plate/batch PCA (visual outlier detection check)
 	TO DO clean up commands from above and plotting script for this (may need substantial re-working with tools that take thousands of samples, check notes/discuss)
+
 -----
 
 #. Plate/batch merge
 	TO DO write scripts/commands
+
 -----
 
 #. Visual test of genotype calls in cluster plots (bin by MAF, pick random subset)
 	TO DO write scripts for this: Gao has plotted these before and I think has scripts. Obviously can't check thousands of SNPs visually svo either use a random pick (e.g. grab 20 or whatever is plottable) or better grab top 10 highest quality SNPs, bottom 10, 10 failed SNPs, 10 at MAF > 10%, 10 at 1-5%, 10 <1%, etc. The aim is to have some visual sanity check of the raw data for some of the markers.
+
 -----
 
 #. Pooled sample QC (all samples; based on high quality set of markers from above; plink commands):
@@ -174,6 +185,7 @@ B. Allele frequency report with proportions:
      - Heterozygosity (standard deviation > +/- 3) and genotype failure rates per individual (>5%)
      - Relatedness between individuals (IBD cut-off >0.185)
      - Gender mis-identification check
+
 -----
 
 
@@ -211,6 +223,7 @@ http://www.nature.com/ng/journal/vaop/ncurrent/pdf/ng.3656.pdf
 Also see:
 Quality control and conduct of genome-wide association meta-analyses
 http://www.nature.com/nprot/journal/v9/n5/full/nprot.2014.071.html
+
 -----
 
 Basic protocol for association analysis:
@@ -254,7 +267,9 @@ http://www.nature.com/ng/journal/v48/n9/full/ng.3623.html
 
 Downstream annotation
 #####################
-.. todo:: move this to the next pipeline
+
+.. todo:: 
+	move this to the next pipeline
 
 DEPICT Biological interpretation of genome-wide association studies using predicted gene functions.
 http://www.ncbi.nlm.nih.gov/pubmed/25597830?dopt=Abstract&holding=npg
