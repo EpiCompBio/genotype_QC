@@ -1,17 +1,15 @@
-#####################
+################################
 Plan for genotype QC for Airwave
-22 Dec 2016
-#####################
+################################
 
-#####################
-Gao He
-Vangelis
-Daivd M
-Antonio B
-#####################
+:Author: Antonio
+:Date: 22 Dec 2016
+:Authors: Gao He, Vangelis, Daivd M, Antonio B
 
-#####################
+
 Current state:
+##############
+
 - The plan is to create a QC pipeline based on Plink and other tools that can be automated using Ruffus and CGAT tools. 
 I'm way behind schedule on the actual genotype tools as there has been a lot more setting up (and other work) than I expected...
 
@@ -25,41 +23,49 @@ I'm way behind schedule on the actual genotype tools as there has been a lot mor
 
 - I created a dummy pipeline in the src folder with a dummy report in the report folder.
 (these are the ones created by the cgat quickstart pipeline)
-#####################
 
-#####################
+
 Future work:
+############
+
 - After the QC steps we will discuss the need for an imputation pipeline and what to do with the different platforms. i.e. Merge them, run as validation, as meta-analysis, etc. This may be project/question dependent though.
 
 - For imputation it would be ideal to do it ourselves. This needs person programming time and accessing the latest reference panel (we should try to get the HRC, Vangelis is looking into this).
-#####################
 
-#####################
+
+
 TO DO main tasks:
+#################
 
 - Turn this plan into an actual pipeline!
 
 - Most of the scripts (from Gao and I and third party) are ready but need cleaning up, making sure they are callable and put into a pipeline.
 
 - I've marked what needs to be done below with "TO DO" and a short explanantion. Basically everything at this point, either creating the stand-alone script for that step or checking the existing one and transferring the command into the ruffus pipeline or cleaning it up/turning into a script.
-#####################
 
-#####################
+
 Notes for Airwave data: 
+#######################
+
+.. todo::
+::
 
 TO DO: Location of basic phenotype data
 TO DO: location of current genotype data
 TO DO: location of WTCHG Core Facility reports
 
 - There are three platforms: Exome, CoreExome and an Affy chip
+.. todo::
+::
+
 TO DO: location of each
 
 - Plates 1-27 are batch 1, 28-53 are batch 2.
-#####################
 
 
-#####################
 Notes from Gao's work:
+######################
+
 Gao has done cleaning up, formatting, sanity checks, etc. already. 
 See emails
 
