@@ -133,7 +133,7 @@ TO DO: load into pipeline by calling each script or function. Needs a if/else de
 B. Allele frequency report with proportions:
 TO DO write commands into ruffus pipeline, e.g. (see also sh scripts above):
 	plink2 --bifle xxx --freq
-	cat plink.frq | tr -s ' ' '\t' | cut -f 4 | grep A | wc -l # First column is a tab, so fourth is A1
+..	cat plink.frq | tr -s ' ' '\t' | cut -f 4 | grep A | wc -l # First column is a tab, so fourth is A1
 
 #. Select homogeneous set of samples to use as set for marker QC (PCA based, with automatic selection using e.g. 'aberrant' R package. This is to avoid artefacts from population structure. Excluded samples are later re-introduced.):
 	http://bioinformatics.oxfordjournals.org/content/28/1/134.full.pdf+html
