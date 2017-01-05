@@ -62,8 +62,6 @@ TO DO: location of each
 Notes from Gao's work:
 Gao has done cleaning up, formatting, sanity checks, etc. already. 
 See emails
-TO DO: update these notes here so we can follow this up more easily
-TO DO: create JISCMAIL list to improve communication, keep history.
 
 ##########
 Subject: RE: airwave QC discussion
@@ -106,7 +104,7 @@ Files to check to pull out commands for most of the steps below:
 	QC_plink_individuals.sh
 	markers_QC_Airwave.sh
 
-QC of markers first, then individual samples although these steps largely follow the UK Biobank protocol (which geos back and forth between markers and individuals as it first creates a homogeneous group [based on ethnicity] from where to pull out high quality genetic markers which are not confounded by population stratification.
+QC of markers first, then individual samples although these steps largely follow the UK Biobank protocol (which goes back and forth between markers and individuals as it first creates a homogeneous group [based on ethnicity] from where to pull out high quality genetic markers which are not confounded by population stratification.
 
 NOTE: Try to keep scripts, modules, pipelines separate.
 ##########
