@@ -4,7 +4,7 @@ Plan for genotype QC for Airwave
 
 :Author: Antonio
 :Date: 22 Dec 2016
-:Authors: Gao He, Vangelis, Daivd M, Antonio B
+.. :Authors: Gao He, Vangelis, Daivd M, Antonio B
 
 
 Current state:
