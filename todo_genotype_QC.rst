@@ -136,7 +136,7 @@ A. Pre-QC steps, GenomeStudio to plink, hg19 liftover, flip strand:
 B. Allele frequency report with proportions:
 	TO DO write commands into ruffus pipeline, e.g. (see also sh scripts above):
 	plink2 --bifle xxx --freq
-..	cat plink.frq | tr -s ' ' '\t' | cut -f 4 | grep A | wc -l # First column is a tab, so fourth is A1
+	cat plink.frq | tr -s ' ' '\t' | cut -f 4 | grep A | wc -l # First column is a tab, so fourth is A1
 
 -----
 
