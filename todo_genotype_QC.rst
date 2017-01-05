@@ -50,9 +50,9 @@ Notes for Airwave data:
 .. todo::
 ::
 
-TO DO: Location of basic phenotype data
-TO DO: location of current genotype data
-TO DO: location of WTCHG Core Facility reports
+| TO DO: Location of basic phenotype data
+| TO DO: location of current genotype data
+| TO DO: location of WTCHG Core Facility reports
 
 .. note:: There are three platforms: Exome, CoreExome and an Affy chip
 
@@ -87,9 +87,7 @@ TO DO: move these scripts here:
  
 - calculated the number of samples and some full batches do not have 288 samples in the intensity files (and therefore also in the plink files).
 
------
-
-.. todo:: 
+.. todo::
 	TO DO: more emails missing, update/transfer info here for clarity and follow-up
 
 -----
