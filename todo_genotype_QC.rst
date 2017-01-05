@@ -59,7 +59,7 @@ TO DO: location of WTCHG Core Facility reports
 .. todo:: 
 	TO DO: location of each
 
-- Plates 1-27 are batch 1, 28-53 are batch 2.
+.. note:: Plates 1-27 are batch 1, 28-53 are batch 2.
 
 
 Notes from Gao's work:
@@ -93,8 +93,6 @@ TO DO: move these scripts here:
 
 test data: use first few batches for example, see bed, bim and fam files in:
 /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles/
------
-
 
 
 PIPELINE PLAN
@@ -113,25 +111,25 @@ QC of markers first, then individual samples although these steps largely follow
 
 A. Pre-QC steps, GenomeStudio to plink, hg19 liftover, flip strand:
 
-TO DO: load into pipeline by calling each script or function. Needs a if/else decision (if illumina, convert to xxx, if affy do xxx, else error):
+	TO DO: load into pipeline by calling each script or function. Needs a if/else decision (if illumina, convert to xxx, if affy do xxx, else error):
 
-	1) GenomeStudio to plink: by zcall script:
+	1. GenomeStudio to plink: by zcall script:
 		Script: /groupvol/med-bio/epiUKB/Airwave/coreExome_zcall/zcall_v3.4/convertReportToTPED.py
 		Job submission script: /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles/1_convertReportToTPED.pbs
 		Result files: /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles
 
-	2) Convert from AB allele to illumina TOP/BOT annotation: by plink, using Wrayner's annotation files
+	2. Convert from AB allele to illumina TOP/BOT annotation: by plink, using Wrayner's annotation files
 		Strand files: /groupvol/med-bio/epiUKB/Airwave/strandFiles
 		(from http://www.well.ox.ac.uk/~wrayner/strand/)
 		Command: plink --noweb --bfile --update-alleles humancoreexome-12v1-1_a.update_alleles.txt --make-bed --out
 
-	3) Update genome build: hg19/build 37 liftover: by plink, using Wrayner's annotation files, also handles strand
+	3. Update genome build: hg19/build 37 liftover: by plink, using Wrayner's annotation files, also handles strand
 		This includes updating a few attributes (chromosome, position, strand flipping etc)
 		Script: http://www.well.ox.ac.uk/~wrayner/strand/update_build.sh
 -----
 
 B. Allele frequency report with proportions:
-TO DO write commands into ruffus pipeline, e.g. (see also sh scripts above):
+	TO DO write commands into ruffus pipeline, e.g. (see also sh scripts above):
 	plink2 --bifle xxx --freq
 ..	cat plink.frq | tr -s ' ' '\t' | cut -f 4 | grep A | wc -l # First column is a tab, so fourth is A1
 
@@ -149,32 +147,32 @@ TO DO write commands into ruffus pipeline, e.g. (see also sh scripts above):
 -----
 
 #. Per batch marker QC (plink commands; drop failing SNPs from all plates):
-TO DO write script for this, needs loop calling batch 1 vs all other batches, then batch 2 vs all other batches, etc. with parameters (eg p-values and all the criteria below) can be set by user:
-	+ Exclude monomorphic SNPs
-	+ Genotype call rate (<98%)
-	+ Genotype frequency consistency across batches (Fisher's exact test p-value <10^-12)
-	+ Allele frequency consistency versus reference panel (eg Hapmap, Fisher's exact test p-value <10^-12)
-	+ Hardy Weinberg equilibrium (p-value <10^-12)
+	- TO DO write script for this, needs loop calling batch 1 vs all other batches, then batch 2 vs all other batches, etc. with parameters (eg p-values and all the criteria below) can be set by user:
+		+ Exclude monomorphic SNPs
+		+ Genotype call rate (<98%)
+		+ Genotype frequency consistency across batches (Fisher's exact test p-value <10^-12)
+		+ Allele frequency consistency versus reference panel (eg Hapmap, Fisher's exact test p-value <10^-12)
+		+ Hardy Weinberg equilibrium (p-value <10^-12)
 -----
 
 #. Plate/batch PCA (visual outlier detection check)
-TO DO clean up commands from above and plotting script for this (may need substantial re-working with tools that take thousands of samples, check notes/discuss)
+	TO DO clean up commands from above and plotting script for this (may need substantial re-working with tools that take thousands of samples, check notes/discuss)
 -----
 
 #. Plate/batch merge
-TO DO write scripts/commands
+	TO DO write scripts/commands
 -----
 
 #. Visual test of genotype calls in cluster plots (bin by MAF, pick random subset)
-TO DO write scripts for this: Gao has plotted these before and I think has scripts. Obviously can't check thousands of SNPs visually svo either use a random pick (e.g. grab 20 or whatever is plottable) or better grab top 10 highest quality SNPs, bottom 10, 10 failed SNPs, 10 at MAF > 10%, 10 at 1-5%, 10 <1%, etc. The aim is to have some visual sanity check of the raw data for some of the markers.
+	TO DO write scripts for this: Gao has plotted these before and I think has scripts. Obviously can't check thousands of SNPs visually svo either use a random pick (e.g. grab 20 or whatever is plottable) or better grab top 10 highest quality SNPs, bottom 10, 10 failed SNPs, 10 at MAF > 10%, 10 at 1-5%, 10 <1%, etc. The aim is to have some visual sanity check of the raw data for some of the markers.
 -----
 
 #. Pooled sample QC (all samples; based on high quality set of markers from above; plink commands):
-TO DO these are plink commands that can be put directly into the ruffus pipeline with a PARAMS config option so user can set different cut-offs (these PARAMS and config file are standard for CGAT pipelines):
-     + Run with autosomal SNPs only
-     + Heterozygosity (standard deviation > +/- 3) and genotype failure rates per individual (>5%)
-     + Relatedness between individuals (IBD cut-off >0.185)
-     + Gender mis-identification check
+	TO DO these are plink commands that can be put directly into the ruffus pipeline with a PARAMS config option so user can set different cut-offs (these PARAMS and config file are standard for CGAT pipelines):
+     - Run with autosomal SNPs only
+     - Heterozygosity (standard deviation > +/- 3) and genotype failure rates per individual (>5%)
+     - Relatedness between individuals (IBD cut-off >0.185)
+     - Gender mis-identification check
 -----
 
 
