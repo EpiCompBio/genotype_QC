@@ -87,12 +87,10 @@ TO DO: move these scripts here:
 - calculated the number of samples and some full batches do not have 288 samples in the intensity files (and therefore also in the plink files).
 -----
 
------
 .. todo:: 
 	TO DO: more emails missing, update/transfer info here for clarity and follow-up
 -----
 
------
 test data: use first few batches for example, see bed, bim and fam files in:
 /groupvol/med-bio/epiUKB/Airwave/coreExome_genotype/plinkFiles/
 -----
@@ -102,7 +100,6 @@ test data: use first few batches for example, see bed, bim and fam files in:
 PIPELINE PLAN
 #############
 
------
 Files to check to pull out commands for most of the steps below:
 	plink_preprocessing.txt
 	QC_plink_individuals.sh
@@ -110,10 +107,8 @@ Files to check to pull out commands for most of the steps below:
 
 QC of markers first, then individual samples although these steps largely follow the UK Biobank protocol (which goes back and forth between markers and individuals as it first creates a homogeneous group [based on ethnicity] from where to pull out high quality genetic markers which are not confounded by population stratification.
 
-.. note:
+.. note::
 	Try to keep scripts, modules, pipelines separate.
-
-
 -----
 
 A. Pre-QC steps, GenomeStudio to plink, hg19 liftover, flip strand:
@@ -133,7 +128,6 @@ TO DO: load into pipeline by calling each script or function. Needs a if/else de
 	3) Update genome build: hg19/build 37 liftover: by plink, using Wrayner's annotation files, also handles strand
 		This includes updating a few attributes (chromosome, position, strand flipping etc)
 		Script: http://www.well.ox.ac.uk/~wrayner/strand/update_build.sh
-
 -----
 
 B. Allele frequency report with proportions:
@@ -152,7 +146,6 @@ TO DO write commands into ruffus pipeline, e.g. (see also sh scripts above):
 		
 	TO DO write script to wrap aberrant and make it callable from CLI within pipeline:	
 		- aberrant with lambda set to 20 for ancestry PC1 and PC2 as summary stats
-
 -----
 
 #. Per batch marker QC (plink commands; drop failing SNPs from all plates):
@@ -162,41 +155,37 @@ TO DO write script for this, needs loop calling batch 1 vs all other batches, th
 	+ Genotype frequency consistency across batches (Fisher's exact test p-value <10^-12)
 	+ Allele frequency consistency versus reference panel (eg Hapmap, Fisher's exact test p-value <10^-12)
 	+ Hardy Weinberg equilibrium (p-value <10^-12)
-
 -----
 
 #. Plate/batch PCA (visual outlier detection check)
 TO DO clean up commands from above and plotting script for this (may need substantial re-working with tools that take thousands of samples, check notes/discuss)
-
 -----
 
 #. Plate/batch merge
 TO DO write scripts/commands
-
 -----
 
 #. Visual test of genotype calls in cluster plots (bin by MAF, pick random subset)
 TO DO write scripts for this: Gao has plotted these before and I think has scripts. Obviously can't check thousands of SNPs visually svo either use a random pick (e.g. grab 20 or whatever is plottable) or better grab top 10 highest quality SNPs, bottom 10, 10 failed SNPs, 10 at MAF > 10%, 10 at 1-5%, 10 <1%, etc. The aim is to have some visual sanity check of the raw data for some of the markers.
-##########
+-----
 
-##########
-- Pooled sample QC (all samples; based on high quality set of markers from above; plink commands):
+#. Pooled sample QC (all samples; based on high quality set of markers from above; plink commands):
 TO DO these are plink commands that can be put directly into the ruffus pipeline with a PARAMS config option so user can set different cut-offs (these PARAMS and config file are standard for CGAT pipelines):
      + Run with autosomal SNPs only
      + Heterozygosity (standard deviation > +/- 3) and genotype failure rates per individual (>5%)
      + Relatedness between individuals (IBD cut-off >0.185)
      + Gender mis-identification check
-##########
+-----
 
-##########
-- VCF check sanity (strand, problematic SNPs, etc.)
+
+#. VCF check sanity (strand, problematic SNPs, etc.)
 TO DO look up tools and insert command into Ruffus, these already exist, plink2 has commands for this.
-##########
-#####################
 
 
-#####################
+
 Future work
+###########
+
 The output of the genotpe QC pipeline should be input for:
 
 - Imputation + post-imputation QC (discuss this at a later stage)
@@ -209,11 +198,11 @@ The output of the genotpe QC pipeline should be input for:
      + Filter out mitochondrial and sex chromosomes
 
 - VCF check sanity (strand, problematic SNPs, etc.)
-#####################
 
 
-#####################
 References
+##########
+
 General protocols and references:
 http://www.ukbiobank.ac.uk/wp-content/uploads/2014/04/UKBiobank_genotyping_QC_documentation-web.pdf
 http://www.nature.com/nprot/journal/v5/n9/pdf/nprot.2010.116.pdf
@@ -223,17 +212,15 @@ http://www.nature.com/ng/journal/vaop/ncurrent/pdf/ng.3656.pdf
 Also see:
 Quality control and conduct of genome-wide association meta-analyses
 http://www.nature.com/nprot/journal/v9/n5/full/nprot.2014.071.html
-#####################
+-----
 
-#####################
 Basic protocol for association analysis:
 Basic statistical analysis in genetic case-control studies
 http://www.nature.com/nprot/journal/v6/n2/abs/nprot.2010.182.html
-#####################
 
 
-#####################
 Other references to check:
+##########################
 
 Eagle v2.3 User Manual
 https://data.broadinstitute.org/alkesgroup/Eagle/
@@ -264,11 +251,11 @@ Also check if Variance inflation factor need calculating and adjusting for. See 
 Identification of 15 genetic loci associated with risk of major depression in individuals of European descent
 http://www.nature.com/ng/journal/v48/n9/full/ng.3623.html
 500,000 subjects
-#####################
 
 
+Downstream annotation
 #####################
-Downstream annotation, some to check later on:
+.. todo:: move this to the next pipeline
+
 DEPICT Biological interpretation of genome-wide association studies using predicted gene functions.
 http://www.ncbi.nlm.nih.gov/pubmed/25597830?dopt=Abstract&holding=npg
-#####################
