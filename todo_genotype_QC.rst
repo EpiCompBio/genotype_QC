@@ -54,7 +54,7 @@ TO DO: Location of basic phenotype data
 TO DO: location of current genotype data
 TO DO: location of WTCHG Core Facility reports
 
-- There are three platforms: Exome, CoreExome and an Affy chip
+.. note:: There are three platforms: Exome, CoreExome and an Affy chip
 
 .. todo:: 
 	TO DO: location of each
