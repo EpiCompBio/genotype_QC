@@ -37,7 +37,7 @@ Future work:
 TO DO main tasks:
 #################
 
-- Turn this plan into an actual pipeline!
+- Turn this plan into an actual pipeline
 
 - Most of the scripts (from Gao and I and third party) are ready but need cleaning up, making sure they are callable and put into a pipeline.
 
@@ -50,9 +50,9 @@ Notes for Airwave data:
 .. todo::
 ::
 
-| TO DO: Location of basic phenotype data
-| TO DO: location of current genotype data
-| TO DO: location of WTCHG Core Facility reports
+TO DO: Location of basic phenotype data
+TO DO: location of current genotype data
+TO DO: location of WTCHG Core Facility reports
 
 .. note:: There are three platforms: Exome, CoreExome and an Affy chip
 
@@ -100,14 +100,17 @@ PIPELINE PLAN
 #############
 
 Files to check to pull out commands for most of the steps below:
-	plink_preprocessing.txt
-	QC_plink_individuals.sh
-	markers_QC_Airwave.sh
+|	plink_preprocessing.txt
+|	QC_plink_individuals.sh
+|	markers_QC_Airwave.sh
 
-QC of markers first, then individual samples although these steps largely follow the UK Biobank protocol (which goes back and forth between markers and individuals as it first creates a homogeneous group [based on ethnicity] from where to pull out high quality genetic markers which are not confounded by population stratification.
+These scripts were run as QC of markers first, then individual samples. Steps in this pipeline follow the UK Biobank protocol (which goes back and forth between markers and individuals as it first creates a homogeneous group [based on ethnicity] from where to pull out high quality genetic markers which are not confounded by population stratification.
 
 .. note::
-	Try to keep scripts, modules, pipelines separate.
+	Keep scripts, modules, pipelines separate.
+
+.. todo::
+	TO DO: scan/ppt pipeline workflow plus notes
 
 -----
 
