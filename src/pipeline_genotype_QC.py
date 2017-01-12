@@ -21,7 +21,7 @@
 #   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 """===========================
-Pipeline template
+Pipeline genotype QC
 ===========================
 
 :Author: Antonio Berlanga-Taylor
@@ -72,19 +72,21 @@ Requirements
 
 The pipeline requires various tools to be installed:
 
-Default CGAT setup
+Requirements:
+
+Default CGAT setup: 
 CGATPipelines
 cgat tools
 
+* Plink 1.90
+.. * samtools >= 1.1
 
-Requirements:
-
-* samtools >= 1.1
 
 Pipeline output
 ===============
 
-.. Describe output files of the pipeline here
+Outputs a genetic marker and individual QC'd file in plink's format plus various descriptive plots and tables in a simple report.
+
 
 Glossary
 ========
@@ -96,6 +98,7 @@ Code
 ====
 
 """
+
 from ruffus import *
 
 import sys
@@ -154,7 +157,8 @@ def connect():
 
 
 # ---------------------------------------------------
-# Specific pipeline tasks
+# Specific pipeline tasks, example function:
+
 @transform(("pipeline.ini", "conf.py"),
            regex("(.*)\.(.*)"),
            r"\1.counts")
