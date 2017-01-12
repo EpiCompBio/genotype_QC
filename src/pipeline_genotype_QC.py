@@ -20,6 +20,14 @@
 #   along with this program; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
+
+#########################
+#Genotype QC pipeline
+#Pre-processing of raw genotype data for use as plink input and QC to eliminate markers and individuals.
+#Antonio J Berlanga-Taylor
+#########################
+
+
 """===========================
 Pipeline genotype QC
 ===========================
@@ -35,6 +43,9 @@ Pipeline genotype QC
 Overview
 ========
 
+##Quality control of subject and SNP genotyping data
+# Note this is now using plink 1.9, which is currently in beta
+
 This pipeline pre-processes genome-wide genotype data from a microarray (Illumina, Affymetrix) and carries out quality control
 processing. It outputs varies plots, tables and a final QC'd file for downstream analysis (GWAS, imputation, etc.).
 
@@ -47,6 +58,9 @@ It requires CGAT tools (pipelines and scripts).
 See notes and further information in:
 https://github.com/EpiCompBio/genotype_tools/blob/master/todo_genotype_QC.rst
 
+Anderson et al. 2010 protocol: http://www.nature.com/nprot/journal/v5/n9/pdf/nprot.2010.116.pdf
+Winkler et al. 2014 protocol (meta-analysis of GWAS): http://www.nature.com/nprot/journal/v9/n5/pdf/nprot.2014.071.pdf
+Plink tutorial: http://pngu.mgh.harvard.edu/~purcell/plink/tutorial.shtml
 
 Usage
 =====
@@ -70,6 +84,8 @@ Input files
 
 Genotype file as provided by Illumina, Affymetrix or converted to Plink formats.
 
+TO DO: For pre-processing input is an Illumina SNP genotype file
+
 Requirements
 ------------
 
@@ -84,13 +100,16 @@ Default CGAT setup:
 * Plink 1.90
 * R
 .. * samtools >= 1.1
+* FlashPCA, previously EIGENSOFT: ftp://pricelab:pricelab@ftp.broadinstitute.org/EIGENSOFT/EIG6.0.1.tar.gz
+* Some plotting scripts and others from Anderson et al 2010 protocol
 
 TODO: add versions
 
 Pipeline output
 ===============
 
-Outputs a genetic marker and individual QC'd file in plink's format plus various descriptive plots and tables in a simple report.
+Outputs a genetic marker and individual QC'd file in plink's format plus various descriptive plots and tables 
+in a simple report.
 
 
 Glossary
@@ -103,6 +122,11 @@ Code
 ====
 
 """
+
+#####################################################################
+#####################################################################
+# Several of the following functions are from CGATPipelines
+#####################################################################
 
 from ruffus import *
 
@@ -140,6 +164,12 @@ PARAMS.update(P.peekParameters(
 # Note that this is a hack and deprecated, better pass all
 # parameters that are needed by a function explicitely.
 
+
+#######################
+########################
+# CGATPipeline function:
+########################
+
 # -----------------------------------------------
 # Utility functions
 def connect():
@@ -162,38 +192,10 @@ def connect():
     return dbh
 
 
+#####################################################################
+#####################################################################
 # ---------------------------------------------------
-# Specific pipeline tasks, example function:
-
-@transform(("pipeline.ini", "conf.py"),
-           regex("(.*)\.(.*)"),
-           r"\1.counts")
-def countWords(infile, outfile):
-    '''count the number of words in the pipeline configuration files.'''
-
-    # the command line statement we want to execute
-    statement = '''awk 'BEGIN { printf("word\\tfreq\\n"); } 
-    {for (i = 1; i <= NF; i++) freq[$i]++}
-    END { for (word in freq) printf "%%s\\t%%d\\n", word, freq[word] }'
-    < %(infile)s > %(outfile)s'''
-
-    # execute command in variable statement.
-    #
-    # The command will be sent to the cluster.  The statement will be
-    # interpolated with any options that are defined in in the
-    # configuration files or variable that are declared in the calling
-    # function.  For example, %(infile)s will we substituted with the
-    # contents of the variable "infile".
-    P.run()
-
-
-@transform(countWords,
-           suffix(".counts"),
-           "_counts.load")
-def loadWordCounts(infile, outfile):
-    '''load results of word counting into database.'''
-    P.load(infile, outfile, "--add-index=word")
-
+# Specific pipeline tasks
 #####################################################################
 
 '''
@@ -202,7 +204,15 @@ General pipeline steps:
 
 A. Pre-QC steps, GenomeStudio to plink, hg19 liftover, flip strand:
 
-	TO DO: load into pipeline by calling each script or function. Needs a if/else decision (if illumina, convert to xxx, if affy do xxx, else error):
+# TO DO: load into pipeline by calling each script or function. Needs a if/else decision (if illumina, convert to xxx, if affy do xxx, else error):
+
+#Data management see:
+#Convert files from raw genotypes to Plink's lgen, map and ped formats:
+#http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#ped
+#https://www.biostars.org/p/10332/
+#http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#map
+
+From Gao, check if we can run the simple commands I have instead (to reduce external script dependency):
 
 	1. GenomeStudio to plink: by zcall script:
 		Script: /groupvol/med-bio/epiUKB/Airwave/coreExome_zcall/zcall_v3.4/convertReportToTPED.py
@@ -218,6 +228,67 @@ A. Pre-QC steps, GenomeStudio to plink, hg19 liftover, flip strand:
 		This includes updating a few attributes (chromosome, position, strand flipping etc)
 		Script: http://www.well.ox.ac.uk/~wrayner/strand/update_build.sh
 '''
+
+@transform(("*.txt",
+			suffix(".txt"),
+           r"\1.counts")
+def convertIllumina(infile, outfile):
+    '''
+	Convert Illumina's Beadstudio output (e.g. 'xxx_FinalReport.txt') into 
+	Plink's lgen, map, ped and fam formats.
+	Check Plink output for results: log file, nof (nofounder) report, nosex (ambiguous sex) report.
+	'''
+
+	# Convert from raw to lgen
+	# Convert from raw to map
+	# Use lgen and map to obtain fam (lgen file has no paternal/maternal IDs, sex or phenotype information 
+	# so are set to missing, see below for generating new fam file and alternate phenotype file)
+	# Use lgen, fam and map to generate ped
+
+    # the command line statement we want to execute:
+
+	statement = '''
+	cat %(infile)s | cut -f1,2,17,18 | sed "1,10d" | sed "s/-/0/g" | awk '{print $2,$2,$1,$3,$4}' > %(outfile)s.lgen;
+	checkpoint;
+	cat %(infile)s | cut -f1,19,20 | sed "1,10d" | awk '{print $2,$1,"0",$3}' | sort -u > %(outfile)s.map;
+	checkpoint;
+	perl -ane '{print "$F[0] $F[0] 0 0 0 -9\n"}' %(outfile)s.lgen | sort -u -k1,1 > %(outfile)s.fam;
+	checkpoint;
+	plink2 --noweb --lfile %(outfile)s --recode --out %(outfile)s.ped;
+	
+	checkpoint;
+	touch %(outfile)s; 
+	'''
+
+	# Generate binary files with plink2 (faster reading):
+	# To disable the automatic setting of the phenotype to missing if the individual has an ambiguous 
+	# sex code, add the --allow-no-sex option.
+	# Sanity check with plink2 to see if file is intact and generate some summary stats. 
+	# Results should be the same as log file generated from converting to binary file
+	statement = '''
+	plink2 --noweb --file %(outfile)s --make-bed --out %(outfile)s;
+	checkpoint;
+	plink2 --noweb --bfile %(outfile)s;
+	'''
+
+    # execute command in variable statement.
+    # The command will be sent to the cluster.  The statement will be
+    # interpolated with any options that are defined in in the
+    # configuration files or variable that are declared in the calling
+    # function.  For example, %(infile)s will we substituted with the
+    # contents of the variable "infile".
+    P.run()
+
+
+# Dummy function, loads data to a database, this is a CGAT function:
+@transform(countWords,
+           suffix(".counts"),
+           "_counts.load")
+def loadWordCounts(infile, outfile):
+    '''load results of word counting into database.'''
+    P.load(infile, outfile, "--add-index=word")
+
+#########################		   
 
 '''
 -----
