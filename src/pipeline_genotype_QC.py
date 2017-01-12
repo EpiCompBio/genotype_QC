@@ -78,12 +78,14 @@ The pipeline requires various tools to be installed:
 Requirements:
 
 Default CGAT setup: 
-CGATPipelines
-cgat tools
+* CGATPipelines
+* cgat tools
 
 * Plink 1.90
+* R
 .. * samtools >= 1.1
 
+TODO: add versions
 
 Pipeline output
 ===============
@@ -141,7 +143,8 @@ PARAMS.update(P.peekParameters(
 # -----------------------------------------------
 # Utility functions
 def connect():
-    '''utility function to connect to database.
+	'''
+    utility function to connect to database.
 
     Use this method to connect to the pipeline database.
     Additional databases can be attached here as well.
@@ -214,14 +217,18 @@ A. Pre-QC steps, GenomeStudio to plink, hg19 liftover, flip strand:
 	3. Update genome build: hg19/build 37 liftover: by plink, using Wrayner's annotation files, also handles strand
 		This includes updating a few attributes (chromosome, position, strand flipping etc)
 		Script: http://www.well.ox.ac.uk/~wrayner/strand/update_build.sh
+'''
 
+'''
 -----
 
 B. Allele frequency report with proportions:
 	TO DO write commands into ruffus pipeline, e.g. (see also sh scripts above):
 	plink2 --bifle xxx --freq
 	cat plink.frq | tr -s ' ' '\t' | cut -f 4 | grep A | wc -l # First column is a tab, so fourth is A1
+'''
 
+'''
 -----
 
 #. Select homogeneous set of samples to use as set for marker QC (PCA based, with automatic selection using e.g. 'aberrant' R package. This is to avoid artefacts from population structure. Excluded samples are later re-introduced.):
@@ -236,6 +243,9 @@ B. Allele frequency report with proportions:
 	TO DO write script to wrap aberrant and make it callable from CLI within pipeline:	
 		- aberrant with lambda set to 20 for ancestry PC1 and PC2 as summary stats
 
+'''
+
+'''
 -----
 
 #. Per batch marker QC (plink commands; drop failing SNPs from all plates):
@@ -246,21 +256,33 @@ B. Allele frequency report with proportions:
 		+ Allele frequency consistency versus reference panel (eg Hapmap, Fisher's exact test p-value <10^-12)
 		+ Hardy Weinberg equilibrium (p-value <10^-12)
 
+'''
+
+'''
 -----
 
 #. Plate/batch PCA (visual outlier detection check)
 	TO DO clean up commands from above and plotting script for this (may need substantial re-working with tools that take thousands of samples, check notes/discuss)
 
+'''
+
+'''
 -----
 
 #. Plate/batch merge
 	TO DO write scripts/commands
 
+'''
+
+'''
 -----
 
 #. Visual test of genotype calls in cluster plots (bin by MAF, pick random subset)
 	TO DO write scripts for this: Gao has plotted these before and I think has scripts. Obviously can't check thousands of SNPs visually svo either use a random pick (e.g. grab 20 or whatever is plottable) or better grab top 10 highest quality SNPs, bottom 10, 10 failed SNPs, 10 at MAF > 10%, 10 at 1-5%, 10 <1%, etc. The aim is to have some visual sanity check of the raw data for some of the markers.
 
+'''
+
+'''
 -----
 
 #. Pooled sample QC (all samples; based on high quality set of markers from above; plink commands):
@@ -270,17 +292,17 @@ B. Allele frequency report with proportions:
      - Relatedness between individuals (IBD cut-off >0.185)
      - Gender mis-identification check
 
------
+'''
 
+'''
+-----
 
 #. VCF check sanity (strand, problematic SNPs, etc.)
 TO DO look up tools and insert command into Ruffus, these already exist, plink2 has commands for this.
+
 '''
 
 ##################################################################
-   
-   
-   
    
 # ---------------------------------------------------
 # Generic pipeline tasks
