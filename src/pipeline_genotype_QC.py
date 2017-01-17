@@ -133,14 +133,21 @@ from ruffus import *
 import sys
 import os
 import sqlite3
+
+import pandas as pd
+import numpy as np
+
 import CGAT.Experiment as E
 import CGATPipelines.Pipeline as P
+import CGAT.Database as DB
 
 # load options from the config file
 PARAMS = P.getParameters(
     ["%s/pipeline.ini" % os.path.splitext(__file__)[0],
      "../pipeline.ini",
      "pipeline.ini"])
+
+# TO DO: check the ini file and configure appropriately, check annot pipeline:
 
 # add configuration values from associated pipelines
 #
@@ -165,7 +172,33 @@ PARAMS.update(P.peekParameters(
 # parameters that are needed by a function explicitely.
 
 
-#######################
+#####################################################################
+#####################################################################
+# Check file inputs, error if none or not the correct file formats
+#####################################################################
+
+# TO DO: check PARAMS calling and pipeline.ini file, change this for os.sys check, not params:
+
+if PARAMS["input"].lower() == "bed":
+    suffix_pattern = "*.bed"
+else:
+    raise ValueError("Binary plink input files are needed (bed, bim and fam, see 
+    https://www.cog-genomics.org/plink2/formats#bed ; If you only have a .bed generate a .bim 
+    and a dummy .fam")
+
+# Check if there is a bim and fam files as well:
+# TO DO: How to handle downstream if there is only a bed file (and no bim and fam)? Error here for now, 
+# easier to leave to user.
+
+#else:
+#raise ValueError("No bim and/or fam files detected. Check suffixes are OK, If you only have a .bed file generate a .bim 
+    from this one and a dummy .fam in order to run this pipeline.")
+
+# Check there is at least one input file (one bed, there should be bim and fam as well though):
+if len(SAMPLE_FILES) == 0:
+    raise ValueError("No input files in the working directory")
+
+########################
 ########################
 # CGATPipeline function:
 ########################
@@ -192,11 +225,24 @@ def connect():
     return dbh
 
 
-#####################################################################
-#####################################################################
-# ---------------------------------------------------
+#########################################
+#########################################
+# Set up some general job mission options
+#########################################
+
+# Set-up per job, leave global definitions based on CGAT's priority handling, in beta though but current form works:
+#https://github.com/CGATOxford/CGATPipelines/pull/254
+
+#to_cluster = True
+#job_threads = 
+#job_memory = 
+
+
+
+#########################
+#########################
 # Specific pipeline tasks
-#####################################################################
+#########################
 
 '''
 General pipeline steps:
@@ -288,6 +334,26 @@ def loadWordCounts(infile, outfile):
     '''load results of word counting into database.'''
     P.load(infile, outfile, "--add-index=word")
 
+# Also see (from Steve S. pipeline):
+@merge(counts,
+       "counts.dir/counts.load")
+def loadCounts(infiles, outfile):
+
+    P.concatenateAndLoad(infiles, outfile,
+                         regex_filename=".*/(.*).counts.gz",
+                         has_titles=False,
+                         cat="track",
+                         header="track,gene_id,counts",
+                         options='-i "gene_id"',
+job_memory=PARAMS["sql_himem"])
+
+
+@follows(xxx)
+def preProcessIllumina():
+    '''preProcessIllumina target'''
+pass
+
+
 #########################		   
 
 '''
@@ -298,6 +364,12 @@ B. Allele frequency report with proportions:
 	plink2 --bifle xxx --freq
 	cat plink.frq | tr -s ' ' '\t' | cut -f 4 | grep A | wc -l # First column is a tab, so fourth is A1
 '''
+
+
+@follows(xxx)
+def alleleFreq():
+    '''alleleFreq target'''
+pass
 
 '''
 -----
@@ -316,6 +388,12 @@ B. Allele frequency report with proportions:
 
 '''
 
+@follows(xxx)
+def homogeneousSet():
+    '''homogeneousSet target'''
+pass
+
+
 '''
 -----
 
@@ -329,6 +407,12 @@ B. Allele frequency report with proportions:
 
 '''
 
+
+@follows(xxx)
+def markerQC():
+    '''markerQC target'''
+pass
+
 '''
 -----
 
@@ -336,6 +420,11 @@ B. Allele frequency report with proportions:
 	TO DO clean up commands from above and plotting script for this (may need substantial re-working with tools that take thousands of samples, check notes/discuss)
 
 '''
+
+@follows(xxx)
+def PCA():
+    '''PCA target'''
+pass
 
 '''
 -----
@@ -345,6 +434,11 @@ B. Allele frequency report with proportions:
 
 '''
 
+@follows(xxx)
+def mergePlates():
+    '''mergePlates target'''
+pass
+
 '''
 -----
 
@@ -352,6 +446,13 @@ B. Allele frequency report with proportions:
 	TO DO write scripts for this: Gao has plotted these before and I think has scripts. Obviously can't check thousands of SNPs visually svo either use a random pick (e.g. grab 20 or whatever is plottable) or better grab top 10 highest quality SNPs, bottom 10, 10 failed SNPs, 10 at MAF > 10%, 10 at 1-5%, 10 <1%, etc. The aim is to have some visual sanity check of the raw data for some of the markers.
 
 '''
+
+
+
+@follows(xxx)
+def SNPcluster():
+    '''SNPcluster target'''
+pass
 
 '''
 -----
@@ -365,6 +466,12 @@ B. Allele frequency report with proportions:
 
 '''
 
+
+@follows(xxx)
+def sampleQC():
+    '''sampleQCsanity target'''
+pass
+
 '''
 -----
 
@@ -373,11 +480,15 @@ TO DO look up tools and insert command into Ruffus, these already exist, plink2 
 
 '''
 
+@follows(xxx)
+def VCFsanity():
+    '''VCFsanity target'''
+pass
+
 ##################################################################
-   
 # ---------------------------------------------------
 # Generic pipeline tasks
-@follows(loadWordCounts)
+@follows(xxx)
 def full():
     pass
 
