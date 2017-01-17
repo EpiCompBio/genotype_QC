@@ -334,7 +334,7 @@ def loadWordCounts(infile, outfile):
     '''load results of word counting into database.'''
     P.load(infile, outfile, "--add-index=word")
 
-# Also see (from Steve S. pipeline):
+# TO DO: Also see (from Steve S. pipeline):
 @merge(counts,
        "counts.dir/counts.load")
 def loadCounts(infiles, outfile):
@@ -348,6 +348,21 @@ def loadCounts(infiles, outfile):
 job_memory=PARAMS["sql_himem"])
 
 
+# TO DO: Also see (from Steve S. pipeline):
+
+@transform(cuffNormClassic,
+           suffix(".log"),
+           ".load")
+def loadCuffNormClassic(infile, outfile):
+    '''load the fpkm table from cuffnorm into the database'''
+
+    fpkm_table = os.path.dirname(infile) + "/genes.fpkm_table"
+
+    P.load(fpkm_table, outfile, 
+	   options='-i "tracking_id"')
+	   
+
+	   
 @follows(xxx)
 def preProcessIllumina():
     '''preProcessIllumina target'''
