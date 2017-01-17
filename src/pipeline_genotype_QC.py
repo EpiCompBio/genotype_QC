@@ -284,10 +284,10 @@ From Gao, check if we can run the simple commands I have instead (to reduce exte
 	    r"\1.counts")
 def convertIllumina(infile, outfile):
     '''
-	Convert Illumina's Beadstudio output (e.g. 'xxx_FinalReport.txt') into 
-	Plink's lgen, map, ped and fam formats.
-	Check Plink output for results: log file, nof (nofounder) report, nosex (ambiguous sex) report.
-	'''
+    Convert Illumina's Beadstudio output (e.g. 'xxx_FinalReport.txt') into 
+    Plink's lgen, map, ped and fam formats.
+    Check Plink output for results: log file, nof (nofounder) report, nosex (ambiguous sex) report.
+    '''
 
 	# Convert from raw to lgen
 	# Convert from raw to map
@@ -315,10 +315,10 @@ def convertIllumina(infile, outfile):
 	# Sanity check with plink2 to see if file is intact and generate some summary stats. 
 	# Results should be the same as log file generated from converting to binary file
 	statement = '''
-        plink2 --noweb --file %(outfile)s --make-bed --out %(outfile)s;
-        checkpoint;
-        plink2 --noweb --bfile %(outfile)s;
-        '''
+            plink2 --noweb --file %(outfile)s --make-bed --out %(outfile)s;
+            checkpoint;
+            plink2 --noweb --bfile %(outfile)s;
+            '''
 
     # execute command in variable statement.
     # The command will be sent to the cluster.  The statement will be
@@ -328,13 +328,13 @@ def convertIllumina(infile, outfile):
     # contents of the variable "infile".
     P.run()
 
-
+'''
 # Dummy function, loads data to a database, this is a CGAT function:
 @transform(countWords,
            suffix(".counts"),
            "_counts.load")
 def loadWordCounts(infile, outfile):
-    '''load results of word counting into database.'''
+    " '''load results of word counting into database.''' " 
     P.load(infile, outfile, "--add-index=word")
 
 # TO DO: Also see (from Steve S. pipeline):
@@ -368,7 +368,7 @@ def loadSuperResult(infile, outfile):
 def preProcessIllumina():
     '''preProcessIllumina target'''
     pass
-
+    '''
 
 #########################		   
 
