@@ -141,7 +141,8 @@ import CGAT.Experiment as E
 import CGATPipelines.Pipeline as P
 import CGAT.Database as DB
 
-# load options from the config file
+# load options from the config file:
+
 PARAMS = P.getParameters(
     ["%s/pipeline.ini" % os.path.splitext(__file__)[0],
      "../pipeline.ini",
@@ -154,6 +155,7 @@ PARAMS = P.getParameters(
 # 1. pipeline_annotations: any parameters will be added with the
 #    prefix "annotations_". The interface will be updated with
 #    "annotations_dir" to point to the absolute path names.
+
 PARAMS.update(P.peekParameters(
     PARAMS["annotations_dir"],
     "pipeline_annotations.py",
@@ -205,6 +207,7 @@ if len(SAMPLE_FILES) == 0:
 
 # -----------------------------------------------
 # Utility functions
+
 def connect():
 	'''
     utility function to connect to database.
@@ -275,9 +278,10 @@ From Gao, check if we can run the simple commands I have instead (to reduce exte
 		Script: http://www.well.ox.ac.uk/~wrayner/strand/update_build.sh
 '''
 
+@active_if(PARAMS["illumina"])
 @transform(("*.txt",
-			suffix(".txt"),
-           r"\1.counts")
+	    suffix(".txt"),
+	    r"\1.counts")
 def convertIllumina(infile, outfile):
     '''
 	Convert Illumina's Beadstudio output (e.g. 'xxx_FinalReport.txt') into 
@@ -294,17 +298,16 @@ def convertIllumina(infile, outfile):
     # the command line statement we want to execute:
 
 	statement = '''
-	cat %(infile)s | cut -f1,2,17,18 | sed "1,10d" | sed "s/-/0/g" | awk '{print $2,$2,$1,$3,$4}' > %(outfile)s.lgen;
-	checkpoint;
-	cat %(infile)s | cut -f1,19,20 | sed "1,10d" | awk '{print $2,$1,"0",$3}' | sort -u > %(outfile)s.map;
-	checkpoint;
-	perl -ane '{print "$F[0] $F[0] 0 0 0 -9\n"}' %(outfile)s.lgen | sort -u -k1,1 > %(outfile)s.fam;
-	checkpoint;
-	plink2 --noweb --lfile %(outfile)s --recode --out %(outfile)s.ped;
-	
-	checkpoint;
-	touch %(outfile)s; 
-	'''
+		cat %(infile)s | cut -f1,2,17,18 | sed "1,10d" | sed "s/-/0/g" | awk '{print $2,$2,$1,$3,$4}' > %(outfile)s.lgen;
+		checkpoint;
+		cat %(infile)s | cut -f1,19,20 | sed "1,10d" | awk '{print $2,$1,"0",$3}' | sort -u > %(outfile)s.map;
+		checkpoint;
+		perl -ane '{print "$F[0] $F[0] 0 0 0 -9\n"}' %(outfile)s.lgen | sort -u -k1,1 > %(outfile)s.fam;
+		checkpoint;
+		plink2 --noweb --lfile %(outfile)s --recode --out %(outfile)s.ped;
+		checkpoint;
+		touch %(outfile)s;
+		'''
 
 	# Generate binary files with plink2 (faster reading):
 	# To disable the automatic setting of the phenotype to missing if the individual has an ambiguous 
@@ -312,9 +315,9 @@ def convertIllumina(infile, outfile):
 	# Sanity check with plink2 to see if file is intact and generate some summary stats. 
 	# Results should be the same as log file generated from converting to binary file
 	statement = '''
-	plink2 --noweb --file %(outfile)s --make-bed --out %(outfile)s;
-	checkpoint;
-	plink2 --noweb --bfile %(outfile)s;
+		plink2 --noweb --file %(outfile)s --make-bed --out %(outfile)s;
+		checkpoint;
+		plink2 --noweb --bfile %(outfile)s;
 	'''
 
     # execute command in variable statement.
@@ -343,30 +346,28 @@ def loadCounts(infiles, outfile):
                          regex_filename=".*/(.*).counts.gz",
                          has_titles=False,
                          cat="track",
-                         header="track,gene_id,counts",
-                         options='-i "gene_id"',
-job_memory=PARAMS["sql_himem"])
+                         header="track,ID,counts",
+                         options='-i "ID"',
+job_memory=PARAMS["xxx"])
 
 
 # TO DO: Also see (from Steve S. pipeline):
 
-@transform(cuffNormClassic,
+@transform(someResults,
            suffix(".log"),
            ".load")
-def loadCuffNormClassic(infile, outfile):
-    '''load the fpkm table from cuffnorm into the database'''
+def loadSuperResult(infile, outfile):
+    '''load the xxx results/processed data table from xxx function into the database'''
 
-    fpkm_table = os.path.dirname(infile) + "/genes.fpkm_table"
+    my_table = os.path.dirname(infile) + "/my_name.my_table"
 
-    P.load(fpkm_table, outfile, 
+    P.load(my_table, outfile, 
 	   options='-i "tracking_id"')
-	   
-
-	   
+   
 @follows(xxx)
 def preProcessIllumina():
     '''preProcessIllumina target'''
-pass
+	pass
 
 
 #########################		   
@@ -384,7 +385,8 @@ B. Allele frequency report with proportions:
 @follows(xxx)
 def alleleFreq():
     '''alleleFreq target'''
-pass
+	pass
+
 
 '''
 -----
@@ -406,7 +408,7 @@ pass
 @follows(xxx)
 def homogeneousSet():
     '''homogeneousSet target'''
-pass
+	pass
 
 
 '''
@@ -426,7 +428,7 @@ pass
 @follows(xxx)
 def markerQC():
     '''markerQC target'''
-pass
+	pass
 
 '''
 -----
@@ -439,7 +441,7 @@ pass
 @follows(xxx)
 def PCA():
     '''PCA target'''
-pass
+	pass
 
 '''
 -----
@@ -452,7 +454,7 @@ pass
 @follows(xxx)
 def mergePlates():
     '''mergePlates target'''
-pass
+	pass
 
 '''
 -----
@@ -467,7 +469,7 @@ pass
 @follows(xxx)
 def SNPcluster():
     '''SNPcluster target'''
-pass
+	pass
 
 '''
 -----
@@ -485,7 +487,7 @@ pass
 @follows(xxx)
 def sampleQC():
     '''sampleQCsanity target'''
-pass
+	pass
 
 '''
 -----
@@ -498,7 +500,7 @@ TO DO look up tools and insert command into Ruffus, these already exist, plink2 
 @follows(xxx)
 def VCFsanity():
     '''VCFsanity target'''
-pass
+	pass
 
 ##################################################################
 # ---------------------------------------------------
@@ -507,6 +509,9 @@ pass
 def full():
     pass
 
+##################################################################
+# ---------------------------------------------------
+# Generic pipeline tasks for CGATReport:
 
 @follows(mkdir("report"))
 def build_report():
@@ -539,6 +544,45 @@ def publish_report():
 
     E.info("publishing report")
     P.publish_report()
+
+##################################################################
+# ---------------------------------------------------
+# See Steve's way of reporting:
+# https://github.com/snsansom/scseq/blob/master/pipelines/pipeline_scrnaseq.py
+
+# --------------------- < generic pipeline tasks > -------------------------- #
+
+'''
+@follows(mkdir("notebook.dir"))
+@transform(glob.glob(os.path.join(os.path.dirname(__file__),
+                                  "pipeline_notebooks",
+                                  os.path.basename(__file__)[:-len(".py")],
+                                  "*")),
+           regex(r".*/(.*)"),
+           r"notebook.dir/\1")
+def notebooks(infile, outfile):
+    '''Utility function to copy the notebooks from the source directory
+       to the working directory'''
+
+    shutil.copy(infile, outfile)
+
+
+@follows(quantitation, qc, notebooks)
+def full():
+    pass
+
+print sys.argv
+
+if __name__ == "__main__":
+	sys.exit(P.main(sys.argv))
+
+'''
+
+##################################################################
+# ---------------------------------------------------
+# The end:
+
+print sys.argv
 
 if __name__ == "__main__":
     sys.exit(P.main(sys.argv))
