@@ -182,9 +182,9 @@ PARAMS.update(P.peekParameters(
 if PARAMS["input"].lower() == "bed":
     suffix_pattern = "*.bed"
 else:
-    raise ValueError("Binary plink input files are needed (bed, bim and fam, see 
+    raise ValueError('''Binary plink input files are needed (bed, bim and fam, see 
     https://www.cog-genomics.org/plink2/formats#bed ; If you only have a .bed generate a .bim 
-    and a dummy .fam")
+    and a dummy .fam''')
 
 # Check if there is a bim and fam files as well:
 # TO DO: How to handle downstream if there is only a bed file (and no bim and fam)? Error here for now, 
@@ -192,7 +192,7 @@ else:
 
 #else:
 #raise ValueError("No bim and/or fam files detected. Check suffixes are OK, If you only have a .bed file generate a .bim 
-    from this one and a dummy .fam in order to run this pipeline.")
+#    from this one and a dummy .fam in order to run this pipeline.")
 
 # Check there is at least one input file (one bed, there should be bim and fam as well though):
 if len(SAMPLE_FILES) == 0:
