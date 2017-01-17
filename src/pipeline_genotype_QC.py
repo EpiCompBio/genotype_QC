@@ -575,6 +575,8 @@ print sys.argv
 if __name__ == "__main__":
 	sys.exit(P.main(sys.argv))
 
+# See:
+# https://github.com/snsansom/scseq/tree/master/pipelines/pipeline_notebooks/pipeline_scrnaseq
 '''
 
 ##################################################################
