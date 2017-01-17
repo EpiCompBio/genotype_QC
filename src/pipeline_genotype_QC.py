@@ -99,8 +99,8 @@ Default CGAT setup:
 
 * Plink 1.90
 * R
-.. * samtools >= 1.1
-* FlashPCA, previously EIGENSOFT: ftp://pricelab:pricelab@ftp.broadinstitute.org/EIGENSOFT/EIG6.0.1.tar.gz
+* FlashPCA: ftp://pricelab:pricelab@ftp.broadinstitute.org/EIGENSOFT/EIG6.0.1.tar.gz
+* aberrant: http://www.well.ox.ac.uk/~spencer/Aberrant/aberrant-manual.pdf
 * Some plotting scripts and others from Anderson et al 2010 protocol
 
 TODO: add versions
@@ -216,7 +216,7 @@ def connect():
     Additional databases can be attached here as well.
 
     Returns an sqlite3 database handle.
-    '''
+	'''
 
     dbh = sqlite3.connect(PARAMS["database_name"])
     statement = '''ATTACH DATABASE '%s' as annotations''' % (
@@ -297,17 +297,17 @@ def convertIllumina(infile, outfile):
 
     # the command line statement we want to execute:
 
-	statement = '''
-		cat %(infile)s | cut -f1,2,17,18 | sed "1,10d" | sed "s/-/0/g" | awk '{print $2,$2,$1,$3,$4}' > %(outfile)s.lgen;
-		checkpoint;
-		cat %(infile)s | cut -f1,19,20 | sed "1,10d" | awk '{print $2,$1,"0",$3}' | sort -u > %(outfile)s.map;
-		checkpoint;
-		perl -ane '{print "$F[0] $F[0] 0 0 0 -9\n"}' %(outfile)s.lgen | sort -u -k1,1 > %(outfile)s.fam;
-		checkpoint;
-		plink2 --noweb --lfile %(outfile)s --recode --out %(outfile)s.ped;
-		checkpoint;
-		touch %(outfile)s;
-		'''
+    statement = '''
+        cat %(infile)s | cut -f1,2,17,18 | sed "1,10d" | sed "s/-/0/g" | awk '{print $2,$2,$1,$3,$4}' > %(outfile)s.lgen;
+        checkpoint;
+        cat %(infile)s | cut -f1,19,20 | sed "1,10d" | awk '{print $2,$1,"0",$3}' | sort -u > %(outfile)s.map;
+        checkpoint;
+        perl -ane '{print "$F[0] $F[0] 0 0 0 -9\n"}' %(outfile)s.lgen | sort -u -k1,1 > %(outfile)s.fam;
+        checkpoint;
+        plink2 --noweb --lfile %(outfile)s --recode --out %(outfile)s.ped;
+        checkpoint;
+        touch %(outfile)s;
+        '''
 
 	# Generate binary files with plink2 (faster reading):
 	# To disable the automatic setting of the phenotype to missing if the individual has an ambiguous 
@@ -315,10 +315,10 @@ def convertIllumina(infile, outfile):
 	# Sanity check with plink2 to see if file is intact and generate some summary stats. 
 	# Results should be the same as log file generated from converting to binary file
 	statement = '''
-		plink2 --noweb --file %(outfile)s --make-bed --out %(outfile)s;
-		checkpoint;
-		plink2 --noweb --bfile %(outfile)s;
-	'''
+        plink2 --noweb --file %(outfile)s --make-bed --out %(outfile)s;
+        checkpoint;
+        plink2 --noweb --bfile %(outfile)s;
+        '''
 
     # execute command in variable statement.
     # The command will be sent to the cluster.  The statement will be
@@ -348,7 +348,7 @@ def loadCounts(infiles, outfile):
                          cat="track",
                          header="track,ID,counts",
                          options='-i "ID"',
-job_memory=PARAMS["xxx"])
+                         job_memory=PARAMS["xxx"])
 
 
 # TO DO: Also see (from Steve S. pipeline):
@@ -367,7 +367,7 @@ def loadSuperResult(infile, outfile):
 @follows(xxx)
 def preProcessIllumina():
     '''preProcessIllumina target'''
-	pass
+    pass
 
 
 #########################		   
@@ -385,7 +385,7 @@ B. Allele frequency report with proportions:
 @follows(xxx)
 def alleleFreq():
     '''alleleFreq target'''
-	pass
+    pass
 
 
 '''
@@ -408,7 +408,7 @@ def alleleFreq():
 @follows(xxx)
 def homogeneousSet():
     '''homogeneousSet target'''
-	pass
+    pass
 
 
 '''
@@ -428,7 +428,7 @@ def homogeneousSet():
 @follows(xxx)
 def markerQC():
     '''markerQC target'''
-	pass
+    pass
 
 '''
 -----
@@ -441,7 +441,7 @@ def markerQC():
 @follows(xxx)
 def PCA():
     '''PCA target'''
-	pass
+    pass
 
 '''
 -----
@@ -454,7 +454,7 @@ def PCA():
 @follows(xxx)
 def mergePlates():
     '''mergePlates target'''
-	pass
+    pass
 
 '''
 -----
@@ -469,7 +469,7 @@ def mergePlates():
 @follows(xxx)
 def SNPcluster():
     '''SNPcluster target'''
-	pass
+    pass
 
 '''
 -----
@@ -487,7 +487,7 @@ def SNPcluster():
 @follows(xxx)
 def sampleQC():
     '''sampleQCsanity target'''
-	pass
+    pass
 
 '''
 -----
@@ -500,7 +500,7 @@ TO DO look up tools and insert command into Ruffus, these already exist, plink2 
 @follows(xxx)
 def VCFsanity():
     '''VCFsanity target'''
-	pass
+    pass
 
 ##################################################################
 # ---------------------------------------------------
@@ -515,10 +515,7 @@ def full():
 
 @follows(mkdir("report"))
 def build_report():
-    '''build report from scratch.
-
-    Any existing report will be overwritten.
-    '''
+    '''build report from scratch. Any existing report will be overwritten.'''
 
     E.info("starting report build process from scratch")
     P.run_report(clean=True)
@@ -561,8 +558,8 @@ def publish_report():
            regex(r".*/(.*)"),
            r"notebook.dir/\1")
 def notebooks(infile, outfile):
-    '''Utility function to copy the notebooks from the source directory
-       to the working directory'''
+    ' '''Utility function to copy the notebooks from the source directory
+       to the working directory''' '
 
     shutil.copy(infile, outfile)
 
