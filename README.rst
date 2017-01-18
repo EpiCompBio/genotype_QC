@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/EpiCompBio/genotype_tools.svg?branch=master
+    :target: https://travis-ci.org/EpiCompBio/genotype_tools
+    
 ##############
 genotype_tools
 ##############
