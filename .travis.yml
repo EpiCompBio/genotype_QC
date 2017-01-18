@@ -61,6 +61,18 @@ matrix:
 
 
 ################
+# Indicate what to do before script, what script to execute and what to do after this:
+# flake8 is wrapper for pep8, pyflakes and McCabe. 
+# pep8 checks the PEP 0008 style
+# pyflakes looks for e.g. unused imports or variables
+# McCabe warns about (unnecessary) complicated code
+
+before_script:
+   flake8 .
+
 # command to run tests
 script: sh run_travis_tests.sh
+
+after_success:
+- codecov
 ################
