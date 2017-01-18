@@ -38,6 +38,9 @@ TO DO main tasks:
 
 - I've marked what needs to be done below with "TO DO" and a short explanantion, mostly either creating the stand-alone script for that step or checking the existing one and transferring the command into the ruffus pipeline or cleaning it up/turning into a script.
 
+- Check travis setup, is pep8 running? flake8 gives errors and log at travis
+- Update external dependencies file
+- Keep track of installations for Docker, David has an initial dockerfile
 
 Notes for Airwave data: 
 #######################
