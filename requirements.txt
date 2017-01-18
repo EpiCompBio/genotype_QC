@@ -2,6 +2,7 @@
 # https://github.com/CGATOxford/CGATPipelines/blob/master/requires.txt
 
 nose
+flake8>=3.0
 
 #cgat
 ## latest setutools required for automatic cythonization
