@@ -120,6 +120,52 @@ Glossary
 .. glossary::
 
 
+
+References
+==========
+
+Basic statistical analysis in genetic case-control studies
+http://www.nature.com/nprot/journal/v6/n2/abs/nprot.2010.182.html
+
+Also see:
+Quality control and conduct of genome-wide association meta-analyses
+http://www.nature.com/nprot/journal/v9/n5/full/nprot.2014.071.html
+
+
+Other references to check:
+==========================
+
+Eagle v2.3 User Manual
+https://data.broadinstitute.org/alkesgroup/Eagle/
+
+Reference-based phasing using the Haplotype Reference Consortium panel : Nature Genetics : Nature Research
+http://www.nature.com/ng/journal/v48/n11/full/ng.3679.html
+
+Population-specific genotype imputations using minimac or IMPUTE2 - nprot.2015.077.pdf
+http://www.nature.com/nprot/journal/v10/n9/pdf/nprot.2015.077.pdf
+
+ExonChipProcessing/BatchAlleleFreqMatrix.R at master · slzhao/ExonChipProcessing
+https://github.com/slzhao/ExonChipProcessing/blob/master/BatchAlleleFreqMatrix.R
+
+gabraham/flashpca: Fast Principal Component Analysis of Large-Scale Genome-Wide Data
+https://github.com/gabraham/flashpca#R
+
+Scaling probabilistic models of genetic variation to millions of humans : Nature Genetics : Nature Research
+http://www.nature.com/ng/journal/v48/n12/full/ng.3710.html
+
+Testing for genetic associations in arbitrarily structured populations : Nature Genetics : Nature Research
+http://www.nature.com/ng/journal/v47/n5/full/ng.3244.html
+
+LD Score regression distinguishes confounding from polygenicity in genome-wide association studies
+http://www.nature.com/ng/journal/v47/n3/full/ng.3211.html
+https://github.com/bulik/ldsc
+
+Also check if Variance inflation factor need calculating and adjusting for. See methods in:
+Identification of 15 genetic loci associated with risk of major depression in individuals of European descent
+http://www.nature.com/ng/journal/v48/n9/full/ng.3623.html
+500,000 subjects
+
+
 Code
 ====
 
@@ -448,6 +494,7 @@ def homogeneousSet():
 
 '''
 
+'''
 1)	Identification of SNPs with excessive missing call rates
 #Calculate the missing genotype rate for each marker. Output will be .lmiss (variant-based missing data report) and .imiss (sample-based missing data report):
 
@@ -499,10 +546,14 @@ plink --bfile ${plink_bfile}_clean_SNPs_autosome --freqx --out ${plink_bfile}_cl
 
 #########################
 
+'''
+
+
 @follows(xxx)
 def markerQC():
     '''markerQC target'''
     pass
+
 
 '''
 -----
