@@ -1,18 +1,33 @@
-# use container-based infrastructure on Travis
+# See:
+# https://docs.travis-ci.com/user/getting-started/
+
+# Set up the environment to run within the Travis VM (see the default packages it already has)
+# https://docs.travis-ci.com/user/ci-environment/
+# Use container-based infrastructure on Travis:
 # http://docs.travis-ci.com/user/workers/container-based-infrastructure/
 # http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/
 sudo: false
 
+# Specify runtime and versions
+# See: https://docs.travis-ci.com/user/customizing-the-build/#Specifying-Runtime-Versions
 language: python
+#python:
+#- "2.7"
 
-env:
-#  global:
-#    - CGAT_TASK_STEPSIZE=100
-  matrix:
-    - TEST_STYLE=1
+# Install dependencies:
+install: "pip install -r requirements.txt"
 
-python:
-- "2.7"
+# Setup any exclusions or inclusions for the builds:
+# None here
 
-install: pip install -r requirements.txt
+# Select how the builds will be run, how many, what language versions, etc.:
+# See: 
+matrix:
+  include:
+  - python: "2.7"
+    env: TEST_STYLE=1
+  - python: "3.5"
+    env: TEST_STYLE=1
+
+# command to run tests
 script: sh run_travis_tests.sh
