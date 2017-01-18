@@ -53,9 +53,9 @@ install: "pip install -r requirements.txt"
 matrix:
   include:
   - python: "2.7"
-    env: TEST_STYLE=1
+    #env: TEST_STYLE=1
   - python: "3.5"
-    env: TEST_STYLE=1
+    #env: TEST_STYLE=1
 
 ################
 
