@@ -2,7 +2,6 @@
 Plan for genotype QC for Airwave
 ################################
 
-:Author: Antonio
 :Date: 22 Dec 2016
 :Authors: Gao He, Vangelis, Daivd M, Antonio B
 
@@ -11,18 +10,16 @@ Current state:
 ##############
 
 - The plan is to create a QC pipeline based on Plink and other tools that can be automated using Ruffus and CGAT tools. 
-I'm way behind schedule on the actual genotype tools as there has been a lot more setting up (and other work) than I expected...
 
 - Based on Gao's and other work the genotype data looks very good in general. 
 
-- CGAT, ruffus, drmma are in place and generally working with a few bumps.
+- CGAT, ruffus, drmaa are in place and generally working with a few bumps.
 
 - We have most of the scripts we need although they require a lot of cleaning up.
 
 - Gao, Vangelis and I have discussed and agreed the steps to follow. These basically mirror de UK Biobank set up.
 
-- I created a dummy pipeline in the src folder with a dummy report in the report folder.
-(these are the ones created by the cgat quickstart pipeline)
+- There is a pipeline in progress in the src folder with a dummy report in the report folder (based on CGAT's quickstart pipeline).
 
 
 Future work:
@@ -37,11 +34,9 @@ Future work:
 TO DO main tasks:
 #################
 
-- Turn this plan into an actual pipeline
-
 - Most of the scripts (from Gao and I and third party) are ready but need cleaning up, making sure they are callable and put into a pipeline.
 
-- I've marked what needs to be done below with "TO DO" and a short explanantion. Basically everything at this point, either creating the stand-alone script for that step or checking the existing one and transferring the command into the ruffus pipeline or cleaning it up/turning into a script.
+- I've marked what needs to be done below with "TO DO" and a short explanantion, mostly either creating the stand-alone script for that step or checking the existing one and transferring the command into the ruffus pipeline or cleaning it up/turning into a script.
 
 
 Notes for Airwave data: 
@@ -221,49 +216,6 @@ http://www.nature.com/nprot/journal/v5/n9/pdf/nprot.2010.116.pdf
 http://www.nature.com/nprot/journal/v10/n9/pdf/nprot.2015.077.pdf
 http://www.nature.com/ng/journal/vaop/ncurrent/pdf/ng.3656.pdf
 
-Also see:
-Quality control and conduct of genome-wide association meta-analyses
-http://www.nature.com/nprot/journal/v9/n5/full/nprot.2014.071.html
-
------
-
-Basic protocol for association analysis:
-Basic statistical analysis in genetic case-control studies
-http://www.nature.com/nprot/journal/v6/n2/abs/nprot.2010.182.html
-
-
-Other references to check:
-##########################
-
-Eagle v2.3 User Manual
-https://data.broadinstitute.org/alkesgroup/Eagle/
-
-Reference-based phasing using the Haplotype Reference Consortium panel : Nature Genetics : Nature Research
-http://www.nature.com/ng/journal/v48/n11/full/ng.3679.html
-
-Population-specific genotype imputations using minimac or IMPUTE2 - nprot.2015.077.pdf
-http://www.nature.com/nprot/journal/v10/n9/pdf/nprot.2015.077.pdf
-
-ExonChipProcessing/BatchAlleleFreqMatrix.R at master · slzhao/ExonChipProcessing
-https://github.com/slzhao/ExonChipProcessing/blob/master/BatchAlleleFreqMatrix.R
-
-gabraham/flashpca: Fast Principal Component Analysis of Large-Scale Genome-Wide Data
-https://github.com/gabraham/flashpca#R
-
-Scaling probabilistic models of genetic variation to millions of humans : Nature Genetics : Nature Research
-http://www.nature.com/ng/journal/v48/n12/full/ng.3710.html
-
-Testing for genetic associations in arbitrarily structured populations : Nature Genetics : Nature Research
-http://www.nature.com/ng/journal/v47/n5/full/ng.3244.html
-
-LD Score regression distinguishes confounding from polygenicity in genome-wide association studies
-http://www.nature.com/ng/journal/v47/n3/full/ng.3211.html
-https://github.com/bulik/ldsc
-
-Also check if Variance inflation factor need calculating and adjusting for. See methods in:
-Identification of 15 genetic loci associated with risk of major depression in individuals of European descent
-http://www.nature.com/ng/journal/v48/n9/full/ng.3623.html
-500,000 subjects
 
 
 Downstream annotation
