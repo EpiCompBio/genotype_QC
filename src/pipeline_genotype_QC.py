@@ -124,12 +124,18 @@ Glossary
 References
 ==========
 
-Basic statistical analysis in genetic case-control studies
-http://www.nature.com/nprot/journal/v6/n2/abs/nprot.2010.182.html
+General protocols and references:
+http://www.ukbiobank.ac.uk/wp-content/uploads/2014/04/UKBiobank_genotyping_QC_documentation-web.pdf
+http://www.nature.com/nprot/journal/v5/n9/pdf/nprot.2010.116.pdf
+http://www.nature.com/nprot/journal/v10/n9/pdf/nprot.2015.077.pdf
+http://www.nature.com/ng/journal/vaop/ncurrent/pdf/ng.3656.pdf
 
 Also see:
 Quality control and conduct of genome-wide association meta-analyses
 http://www.nature.com/nprot/journal/v9/n5/full/nprot.2014.071.html
+
+Basic statistical analysis in genetic case-control studies
+http://www.nature.com/nprot/journal/v6/n2/abs/nprot.2010.182.html
 
 
 Other references to check:
