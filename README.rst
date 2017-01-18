@@ -1,4 +1,7 @@
-# genotype_tools
+##############
+genotype_tools
+##############
+
 Various scripts and tools for handling genotype data. Currently these are written for the Airwave project:
 https://www.police-health.org.uk/
 
