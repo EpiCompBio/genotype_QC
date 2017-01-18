@@ -217,6 +217,16 @@ http://www.nature.com/nprot/journal/v10/n9/pdf/nprot.2015.077.pdf
 http://www.nature.com/ng/journal/vaop/ncurrent/pdf/ng.3656.pdf
 
 
+Also see:
+Quality control and conduct of genome-wide association meta-analyses
+http://www.nature.com/nprot/journal/v9/n5/full/nprot.2014.071.html
+
+Basic statistical analysis in genetic case-control studies
+http://www.nature.com/nprot/journal/v6/n2/abs/nprot.2010.182.html
+
+Further references in:
+https://github.com/EpiCompBio/genotype_tools/blob/master/src/pipeline_genotype_QC.py
+
 
 Downstream annotation
 #####################
