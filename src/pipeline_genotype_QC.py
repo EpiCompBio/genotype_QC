@@ -280,10 +280,11 @@ From Gao, check if we can run the simple commands I have instead (to reduce exte
 		Script: http://www.well.ox.ac.uk/~wrayner/strand/update_build.sh
 '''
 
+# TO DO: check call to params, active if illumina = true:
 @active_if(PARAMS["illumina"])
 @transform(("*.txt",
 	    suffix(".txt"),
-	    r"\1.counts")
+	    "")
 def convertIllumina(infile, outfile):
     '''
     Convert Illumina's Beadstudio output (e.g. 'xxx_FinalReport.txt') into 
@@ -316,11 +317,11 @@ def convertIllumina(infile, outfile):
 	# sex code, add the --allow-no-sex option.
 	# Sanity check with plink2 to see if file is intact and generate some summary stats. 
 	# Results should be the same as log file generated from converting to binary file
-	statement = '''
-            plink2 --noweb --file %(outfile)s --make-bed --out %(outfile)s;
-            checkpoint;
-            plink2 --noweb --bfile %(outfile)s;
-            '''
+    statement = '''
+        plink2 --noweb --file %(outfile)s --make-bed --out %(outfile)s;
+        checkpoint;
+        plink2 --noweb --bfile %(outfile)s;
+        '''
 
     # execute command in variable statement.
     # The command will be sent to the cluster.  The statement will be
@@ -365,12 +366,14 @@ def loadSuperResult(infile, outfile):
 
     P.load(my_table, outfile, 
 	   options='-i "tracking_id"')
-   
+
+'''
+           
 @follows(xxx)
 def preProcessIllumina():
     '''preProcessIllumina target'''
     pass
-    '''
+
 
 #########################		   
 
@@ -383,6 +386,8 @@ B. Allele frequency report with proportions:
 	cat plink.frq | tr -s ' ' '\t' | cut -f 4 | grep A | wc -l # First column is a tab, so fourth is A1
 '''
 
+# Get frequency stats:
+#plink --bfile chr22_Airwave_CPMG_Plasma --freq --out test_chr22.test
 
 @follows(xxx)
 def alleleFreq():
@@ -407,6 +412,19 @@ def alleleFreq():
 
 '''
 
+# Run loop to convert vcf to binary and subset individuals:
+# Bash loop to process with qsub (use #Ruffus!):
+#qsub PBS_plink_subset_loop.sh      
+           
+# Create list of subsetted files:
+#ls -1 *.subset.bed > list_subsetted_files.txt
+
+# Merge all resulting plink binaries into one file:
+#plink --make-bed --bfile [?] --merge-list list_subsetted_files.txt --out Airwave_imputed_metabolomics_subset
+
+
+
+           
 @follows(xxx)
 def homogeneousSet():
     '''homogeneousSet target'''
