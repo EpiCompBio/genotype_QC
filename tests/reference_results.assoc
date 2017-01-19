@@ -1,0 +1,4 @@
+# Dummy file, update later with real results, some gold standard, published result, etc. 
+# that can serve as reference to run our pipeline results against to test whether new code
+# changes results (i.e. introduces a silent bug for example)
+# assoc is just a holder, this could be a plink association tests results file for instance
