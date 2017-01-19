@@ -479,7 +479,7 @@ def alleleFreq():
 # Merge all resulting plink binaries into one file:
 #plink --make-bed --bfile [?] --merge-list list_subsetted_files.txt --out Airwave_imputed_metabolomics_subset
 
-
+# TO DO: smartpca libopenblas.so.0 missing; GSL library needed; run flashpca otherwise but need to adapt r script for plotting
            
 @follows(xxx)
 def homogeneousSet():
