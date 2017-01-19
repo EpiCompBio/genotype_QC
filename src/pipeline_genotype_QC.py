@@ -201,6 +201,9 @@ from ruffus import *
 import sys
 import os
 import sqlite3
+import glob
+import re
+import shutil
 
 import pandas as pd
 import numpy as np
@@ -208,65 +211,45 @@ import numpy as np
 import CGAT.Experiment as E
 import CGATPipelines.Pipeline as P
 import CGAT.Database as DB
+import CGAT.IOTools as IOTools
+
+
+##################################################################################
+##################################################################################
+# Get parameters, check file inputs, error if none or not the correct file formats
+##################################################################################
 
 # load options from the config file:
-
 PARAMS = P.getParameters(
     ["%s/pipeline.ini" % os.path.splitext(__file__)[0],
      "../pipeline.ini",
      "pipeline.ini"])
 
-# TO DO: check the ini file and configure appropriately, check annot pipeline:
+#TO DO: update this to take .txt files from Illumina, from Affy or 
+# directly from plink format
+# list of acceptable input formats
+INPUT_FORMATS = ["*.bed", "*.txt"]
 
-# add configuration values from associated pipelines
-#
-# 1. pipeline_annotations: any parameters will be added with the
-#    prefix "annotations_". The interface will be updated with
-#    "annotations_dir" to point to the absolute path names.
-
-PARAMS.update(P.peekParameters(
-    PARAMS["annotations_dir"],
-    "pipeline_annotations.py",
-    on_error_raise=__name__ == "__main__",
-    prefix="annotations_",
-    update_interface=True))
-
-
-# if necessary, update the PARAMS dictionary in any modules file.
-# e.g.:
-#
-# import CGATPipelines.PipelineGeneset as PipelineGeneset
-# PipelineGeneset.PARAMS = PARAMS
-#
-# Note that this is a hack and deprecated, better pass all
-# parameters that are needed by a function explicitely.
-
-
-#####################################################################
-#####################################################################
-# Check file inputs, error if none or not the correct file formats
-#####################################################################
-
-# TO DO: check PARAMS calling and pipeline.ini file, change this for os.sys check, not params:
-
-if PARAMS["input"].lower() == "bed":
-    suffix_pattern = "*.bed"
+# Check there is at least one input file (one bed, there should be bim and fam as well though):
+# TO DO:
+if len(xxx check os.sys for dir for INPUT_FORMATS) == 0:
+    raise ValueError('''No input files in the working directory.
+		     Binary plink input files are needed (bed, bim and fam, see 
+		     https://www.cog-genomics.org/plink2/formats#bed ; If you only have a .bed 
+		     generate a .bim and a dummy .fam''')
 else:
-    raise ValueError('''Binary plink input files are needed (bed, bim and fam, see 
-    https://www.cog-genomics.org/plink2/formats#bed ; If you only have a .bed generate a .bim 
-    and a dummy .fam''')
+    # Regular expression to get the prefix for a file:
+    REGEX_FILE = r"([^/]+).(bed|txt)"
 
 # Check if there is a bim and fam files as well:
 # TO DO: How to handle downstream if there is only a bed file (and no bim and fam)? Error here for now, 
 # easier to leave to user.
 
-#else:
-#raise ValueError("No bim and/or fam files detected. Check suffixes are OK, If you only have a .bed file generate a .bim 
-#    from this one and a dummy .fam in order to run this pipeline.")
-
-# Check there is at least one input file (one bed, there should be bim and fam as well though):
-if len(SAMPLE_FILES) == 0:
-    raise ValueError("No input files in the working directory")
+# TO DO: dummy function that calls the pipeline.ini PARAMS options for [plink]
+def plinkXXX(infile, outfiles):
+        '''process xxx.
+        '''
+        plink_options = PARAMS["plink_options"]
 
 ########################
 ########################
