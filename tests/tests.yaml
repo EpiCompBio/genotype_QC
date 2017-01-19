@@ -1,0 +1,8 @@
+# Dummy holder, update later
+# Use Travis testing for unit tests
+
+some_unit_test:
+       stdin: sample_data.bed
+       outputs: [stdout]
+       references: [results_file_to_compare_against.assoc]
+options: --log=test.log
