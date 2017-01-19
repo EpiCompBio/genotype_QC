@@ -4,6 +4,8 @@
 
 # TO DO: update with further options such as include README.rst and others when ready
 
+# TO DO: to add tests see https://python-packaging.readthedocs.io/en/latest/testing.html
+
 from setuptools import setup
 
 setup(name='pipeline_genotype_QC',
