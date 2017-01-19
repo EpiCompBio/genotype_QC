@@ -69,6 +69,20 @@ Usage
 
 See :ref:`PipelineSettingUp` and :ref:`PipelineRunning` on general
 information how to use CGAT pipelines.
+See also Ruffus to understand how pipelines can be re-started from
+different points.
+
+The workflow of the pipeline can be as follows:
+
+1. Run the ``full`` target to perform initial QC on the raw data. Then
+   build the report (``build_report`` target).
+2. Inspect the output (plots, tables, frequency reports, etc. 
+   to decide if parameters need to be changed.
+3. Edit the configuration file ``pipeline.ini`` or create a new directory
+   and re-run from the raw data.
+4. Alternatively, run up to intermediate targets, particularly if you have
+   a large dataset and want to inspect results and plots before continuing.
+
 
 Configuration
 -------------
