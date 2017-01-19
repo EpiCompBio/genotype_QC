@@ -67,12 +67,15 @@ matrix:
 # pyflakes looks for e.g. unused imports or variables
 # McCabe warns about (unnecessary) complicated code
 
+# TO DO: How to get log, setup automatic fixes, etc.? This will cause Travis to error all the time for now:
 before_script:
    flake8 .
 
 # command to run tests
+# TO DO: this is not working, check nosetests, cgat test_style.py script, etc.:
 script: sh run_travis_tests.sh
 
+# TO DO: This doesn't work:
 after_success:
 - codecov
 ################
