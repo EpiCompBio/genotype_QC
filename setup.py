@@ -2,6 +2,8 @@
 # For a fuller example see: https://github.com/CGATOxford/UMI-tools/blob/master/setup.py
 # Or: https://github.com/CGATOxford/cgat/blob/master/setup.py
 
+# TO DO: update with further options such as include README.rst and others when ready
+
 from setuptools import setup
 
 setup(name='pipeline_genotype_QC',
@@ -12,5 +14,9 @@ setup(name='pipeline_genotype_QC',
       author_email='a.berlanga at imperial.ac.uk',
       license='GPL-3.0',
 #      packages=['funniest'],
+#      install_requires=[
+#            'cgat',
+#            'CGATPipelines',
+#      ],
       zip_safe=False
      )
