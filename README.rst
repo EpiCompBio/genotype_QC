@@ -9,7 +9,6 @@ Various scripts and tools for handling genotype data. Currently these are writte
 https://www.police-health.org.uk/
 
 Just starting so things are messy and much to do. Clean up file names, create pipeline, etc.
-Mainly building a genotype QC pipeline.
 
 Check Ruffus:
 http://www.ruffus.org.uk/
