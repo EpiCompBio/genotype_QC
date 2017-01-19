@@ -1,3 +1,3 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 nosetests -v tests/test_style.py &> test_style.out &
