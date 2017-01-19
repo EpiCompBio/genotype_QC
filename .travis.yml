@@ -67,8 +67,8 @@ matrix:
 # pyflakes looks for e.g. unused imports or variables
 # McCabe warns about (unnecessary) complicated code
 
-#before_script:
-#   flake8 .
+before_script:
+   flake8 .
 
 # command to run tests
 script: sh run_travis_tests.sh
