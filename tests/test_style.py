@@ -29,7 +29,7 @@ from nose.tools import ok_
 EXPRESSIONS = (
     ('tests', 'tests/*.py'),
     ('scripts', 'scripts/*.py'),
-    ('src', 'src/*.py')
+    ('genotype_QC', 'genotype_QC/*.py')
     )
 
 # Codes to ignore in the pep8 BaseReport
