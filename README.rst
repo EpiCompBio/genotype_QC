@@ -1,6 +1,10 @@
 .. image:: https://travis-ci.org/EpiCompBio/genotype_tools.svg?branch=master
     :target: https://travis-ci.org/EpiCompBio/genotype_tools
-    
+
+.. image:: https://readthedocs.org/projects/genotype-qc/badge/?version=latest
+    :target: http://genotype-qc.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 ##############
 genotype_tools
 ##############
