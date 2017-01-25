@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.org/EpiCompBio/genotype_tools.svg?branch=master
-    :target: https://travis-ci.org/EpiCompBio/genotype_tools
+.. image:: https://travis-ci.org/EpiCompBio/genotype_QC.svg?branch=master
+    :target: https://travis-ci.org/EpiCompBio/genotype_QC
 
 .. image:: https://readthedocs.org/projects/genotype-qc/badge/?version=latest
     :target: http://genotype-qc.readthedocs.io/en/latest/?badge=latest
