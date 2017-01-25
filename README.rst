@@ -5,9 +5,9 @@
     :target: http://genotype-qc.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-##############
-genotype_tools
-##############
+###########
+genotype_QC
+###########
 
 Various scripts and tools for handling genotype data. Currently these are written for the Airwave project:
 https://www.police-health.org.uk/
@@ -21,8 +21,4 @@ and CGAT:
 http://www.cgat.org/cgat/Tools/the-cgat-code-collection
 
 Note that several scripts are borrowed (Anderson et al., 2010 QC paper for example).
-
-
-
-
 
